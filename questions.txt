@@ -1,2 +1,5 @@
 Nola egin localhost:81/register funtzionatzea extensiorik gabe?
 PHP kodea "garbia" da?
+index.php-ren kodea (SQL konexioa) hor geratu behar da edo dbConnect.php artxiboan sartu dezaket?
+Nola erregistratu erabiltzaile eta pasahitzak gero saioa hasteko?
+
