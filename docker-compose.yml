@@ -11,7 +11,8 @@ services:
     links:
       - db
     volumes:
-      - ./app:/var/www/html/
+      - ./app:/views
+    #  - ./app:/var/www/html/ # DEFAULT APACHE PATH
     depends_on:
       - db
 
