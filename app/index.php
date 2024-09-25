@@ -1,4 +1,9 @@
 <?php
+
+  // Redirect to register.php
+  header('Location: register.php');
+  exit;
+  
   echo '<h1>Yeah, it works!<h1>';
   // phpinfo();
   $hostname = "db";

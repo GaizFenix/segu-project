@@ -1,7 +1,30 @@
 <?php
-include '../includes/header.php';
 include '/includes/dbConnect.php'; // CURRENTLY NOT WORKING
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Define the Basque locale
+        flatpickr.localize({
+            weekdays: {
+                shorthand: ['Al.', 'Ar.', 'Az.', 'Og.', 'Ol.', 'La.', 'Ig.'],
+                longhand: ['Astelehena', 'Asteartea', 'Asteazkena', 'Osteguna', 'Ostirala', 'Larunbata', 'Igandea']
+            },
+            months: {
+                shorthand: ['Urt.', 'Ots.', 'Mar.', 'Api.', 'Mai.', 'Eka.', 'Uzt.', 'Abu.', 'Ira.', 'Urr.', 'Aza.', 'Abe.'],
+                longhand: ['Urtarrila', 'Otsaila', 'Martxoa', 'Apirila', 'Maiatza', 'Ekaina', 'Uztaila', 'Abuztua', 'Iraila', 'Urria', 'Azaroa', 'Abendua']
+            },
+        });
+    </script>
+</head>
+<body>
 
 <h2>Register</h2>
 <form id="register_form" action="register.php" method="post">
@@ -15,8 +38,11 @@ include '/includes/dbConnect.php'; // CURRENTLY NOT WORKING
     <input type="text" id="jaiotzeData" name="jaiotzeData" placeholder="adib.: 2000-01-01" required><br>
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" placeholder="adib.: adibidea@eib.eus" required><br>
-    <input id="register_submit" type="submit" value="Register">
+    <input id="register_submit" type="submit" value="Erregistratu">
 </form>
+    
+</body>
+</html>
 
 <!-- ONLY ALLOWS LETTERS AND SPACES ON IZENABIZENAK -->
 <script> 
@@ -31,24 +57,24 @@ document.getElementById('izenAbizenak').addEventListener('input', function (even
 <script>
 document.getElementById('NAN').addEventListener('input', function (event) {
     var input = event.target;
-    var value = input.value.toUpperCase().replace(/[^0-9A-Z]/g, ''); // Allow only numbers and letters
+    var value = input.value.toUpperCase().replace(/[^0-9A-Z-]/g, ''); // Allow only numbers, letters, and hyphen
 
-    // Automatically insert hyphen after 8 digits
-    if (value.length > 8) {
-        value = value.slice(0, 8) + '-' + value.slice(8);
-    }
+    // Split the value into parts before and after the hyphen
+    var parts = value.split('-');
+    var numbers = parts[0].slice(0, 8).replace(/[^0-9]/g, ''); // Allow only numbers before the hyphen
+    var letter = parts[1] ? parts[1].slice(0, 1).replace(/[^A-Z]/g, '') : ''; // Allow only letters after the hyphen
 
-    // Enforce format 11111111-Z
-    if (value.length > 10) {
-        value = value.slice(0, 10);
+    // Reconstruct the value with the hyphen
+    if (numbers.length === 8) {
+        value = numbers + '-' + letter;
+    } else {
+        value = numbers;
     }
 
     input.value = value;
 
     // Validate the letter if the format is correct
     if (value.length === 10 && /^\d{8}-[A-Z]$/.test(value)) {
-        var numbers = value.slice(0, 8);
-        var letter = value.slice(9);
         var validLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
         var calculatedLetter = validLetters[numbers % 23];
         if (calculatedLetter !== letter) {
@@ -90,12 +116,13 @@ document.addEventListener('DOMContentLoaded', function () {
     flatpickr("#jaiotzeData", {
         dateFormat: "Y-m-d",
         locale: "eu",
-        allowInput: true
+        allowInput: true,
+        maxDate: "today"
     });
 });
 </script>
 
-<!-- ENFORCE FORMAT yyyy-mm-dd ON JAIOTZEDATA // ALTERNATIVE METHOD WITHOUT CALENDAR GUI
+<!-- ENFORCE FORMAT yyyy-mm-dd ON JAIOTZEDATA | LIMIT TEXT INPUT -->
 <script>
 document.getElementById('jaiotzeData').addEventListener('input', function (event) {
     var input = event.target;
@@ -124,7 +151,7 @@ document.getElementById('jaiotzeData').addEventListener('input', function (event
     }
 });
 </script>
--->
+
 
 <!-- VALIDATE EMAIL FORMAT --> <!-- SUPPOSEDLY NOT NECESSARY AS HTML5 ALREADY DOES THIS -->
 <script>
