@@ -1,34 +1,41 @@
-web:
-   image: web
-   environment:
-     - ALLOW_OVERRIDE=true
-   ports:
-     - "81:80"
-   links:
-     - db
-   volumes:
-     - ./app:/var/www/html/
+version: '3.8'
 
-db:
-  image: mariadb:10.8.2
-  restart: always
-  volumes:
-    - ./mysql:/var/lib/mysql
-  environment:
-    MYSQL_ROOT_PASSWORD: root
-    MYSQL_USER: admin
-    MYSQL_PASSWORD: test
-    MYSQL_DATABASE: database
-  ports:
-    - "8889:3306"
+services:
+  web:
+    image: php:7.2.2-apache
+    container_name: php-web
+    environment:
+      - ALLOW_OVERRIDE=true
+    ports:
+      - "81:80"
+    links:
+      - db
+    volumes:
+      - ./app:/var/www/html/
+    depends_on:
+      - db
 
-phpmyadmin:
-  image: phpmyadmin/phpmyadmin:latest
-  links:
-    - db
-  ports:
-    - 8890:80
-  environment:
-    MYSQL_USER: admin
-    MYSQL_PASSWORD: test
-    MYSQL_DATABASE: database
+  db:
+    image: mariadb:10.8.2
+    container_name: mariadb
+    restart: always
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: test
+      MYSQL_DATABASE: database
+    ports:
+      - "8889:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - db
+    ports:
+      - 8890:80
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: test
+      MYSQL_DATABASE: database
