@@ -1,0 +1,2 @@
+Nola egin localhost:81/register funtzionatzea extensiorik gabe?
+PHP kodea "garbia" da?
