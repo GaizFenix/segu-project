@@ -203,6 +203,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $erabiltzailea = $_POST['erabiltzailea'];
     $pasahitza = $_POST['pasahitza'];
 
+    // Apply a hash function to the password
+    $hashed_password = password_hash($pasahitza, PASSWORD_BCRYPT);
+
     // Validate NAN
     if (!validateNAN($NAN)) {
         echo "Invalid NAN.";
@@ -213,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
         // Execute the first statement
         if ($stmt->execute()) {
-            echo "Registration successful!";
+            echo "Data registration successful!";
         } else {
             echo "Error: " . $stmt->error;
         }
@@ -223,17 +226,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
         // Prepare and bind for the second insert
         $stmt = $conn->prepare("INSERT INTO erabiltzaileak (erabiltzailea, pasahitza) VALUES (?, ?)");
-        $stmt->bind_param("ss", $erabiltzailea, $pasahitza);
+        $stmt->bind_param("ss", $erabiltzailea, $$hashed_password);
     
         // Execute the second statement
         if ($stmt->execute()) {
-            echo "Registration successful!";
+            echo "User and password registration successful!";
         } else {
             echo "Error: " . $stmt->error;
         }
     
         // Close the second statement
-        $stmt->close(); // DO I HAVE TO CLOSE IT???
+        $stmt->close();
     }
 }
 
