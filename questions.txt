@@ -1,5 +1,0 @@
-DONE - Ez da beharrezkoa extensioa kentzea | Nola egin localhost:81/register funtzionatzea extensiorik gabe?
-DONE - Ez dau garrantziarik | PHP kodea "garbia" da?
-DONE - Nahi dugun tokian jarri daiteke, gomendagarria beste artxibo batean | index.php-ren kodea (SQL konexioa) hor geratu behar da edo dbConnect.php artxiboan sartu dezaket?
-DONE - Erabiltzaileen erregistroan, "username" eta "pass" kanpoak gehitu | Nola erregistratu erabiltzaile eta pasahitzak gero saioa hasteko?
-

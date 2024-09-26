@@ -1,5 +1,0 @@
-1 - Izena (interno)
-2 - Marka
-3 - Modeloa
-4 - Serie Zenbakia (ID)
-5 - Kokalekua
