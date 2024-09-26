@@ -8,7 +8,7 @@
 -- Versión de PHP: 7.4.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
+-- START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `database`
+-- Base de datos: `euskadigital`
 --
 
 -- --------------------------------------------------------
@@ -41,9 +41,10 @@ CREATE TABLE `ERABILTZAILEAK` (
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre`) VALUES
-(1, 'mikel'),
-(2, 'aitor');
+INSERT INTO `usuarios` (`izenAbizenak`, `NAN`, `telefonoa`, `jaiotzeData`, `email`) VALUES
+('Mikel Aranburu', '12345678A', 666666666, '1999-01-01', 'mikel.aranburu@gmail.com'),
+('Gaizka Carmona', '12345678B', 666666666, '1999-01-01', 'gaizka.carmona@gmail.com'),
+('Aitor Etxebarria', '12345678C', 666666666, '1999-01-01', 'aitor.etxebarria@gmail.com');
 
 --
 -- Índices para tablas volcadas
@@ -52,9 +53,9 @@ INSERT INTO `usuarios` (`id`, `nombre`) VALUES
 --
 -- Indices de la tabla `usuarios`
 --
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`);
-COMMIT;
+-- ALTER TABLE `usuarios`
+--  ADD PRIMARY KEY (`id`);
+--COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
