@@ -24,12 +24,17 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuarios`
+-- Estructura de tabla para la tabla `ERABILTZAILEAK`
 --
 
-CREATE TABLE `usuarios` (
-  `id` int(11) NOT NULL,
-  `nombre` text NOT NULL
+CREATE TABLE `ERABILTZAILEAK` (
+  `izenAbizenak` VARCHAR(255) NOT NULL,
+  `NAN` VARCHAR(10) NOT NULL PRIMARY KEY,
+  `telefonoa` INT(9) NOT NULL,
+  `jaiotzeData` DATE NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  -- `erabiltzailea` VARCHAR(255) NOT NULL,
+  -- `pasahitza` VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --

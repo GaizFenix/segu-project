@@ -25,7 +25,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: admin
       MYSQL_PASSWORD: test
-      MYSQL_DATABASE: database
+      MYSQL_DATABASE: euskadigital
     ports:
       - "8889:3306"
 
@@ -38,4 +38,4 @@ services:
     environment:
       MYSQL_USER: admin
       MYSQL_PASSWORD: test
-      MYSQL_DATABASE: database
+      MYSQL_DATABASE: euskadigital

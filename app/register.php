@@ -1,5 +1,5 @@
 <?php
-include '/includes/dbConnect.php'; // CURRENTLY NOT WORKING
+include 'includes/dbConnect.php'; // CURRENTLY NOT WORKING
 ?>
 
 <!DOCTYPE html>
@@ -30,14 +30,26 @@ include '/includes/dbConnect.php'; // CURRENTLY NOT WORKING
 <form id="register_form" action="register.php" method="post">
     <label for="izenAbizenak">Izen-abizenak:</label>
     <input type="text" id="izenAbizenak" name="izenAbizenak" placeholder="adib.: Nikola Tesla" required><br>
+
     <label for="NAN">NAN-a:</label>
     <input type="text" id="NAN" name="NAN" placeholder="adib.: 12345678-Z" required><br>
+
     <label for="telefonoa">Telefonoa:</label>
     <input type="tel" id="telefonoa" name="telefonoa" placeholder="adib.: 123456789" required><br> <!-- check type -->
+
     <label for="jaiotzeData">Jaiotze data (uuuu-hh-mm):</label>
     <input type="text" id="jaiotzeData" name="jaiotzeData" placeholder="adib.: 2000-01-01" required><br>
+
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" placeholder="adib.: adibidea@eib.eus" required><br>
+
+    <br>
+    <label for="erabiltzailea">Erabiltzailea:</label>
+    <input type="text" id="erabiltzailea" name="erabiltzailea" required><br>
+
+    <label for="pasahitza">Pasahitza:</label>
+    <input type="password" id="pasahitza" name="pasahitza" required><br>
+
     <input id="register_submit" type="submit" value="Erregistratu">
 </form>
     
@@ -188,18 +200,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $telefonoa = $_POST['telefonoa'];
     $jaiotzeData = $_POST['jaiotzeData'];
     $email = $_POST['email'];
+    $erabiltzailea = $_POST['erabiltzailea'];
+    $pasahitza = $_POST['pasahitza'];
 
     // Validate NAN
     if (!validateNAN($NAN)) {
         echo "Invalid NAN.";
     } else {
-        // Insert data into the database
-        $query = "INSERT INTO usuarios (izenAbizenak, NAN, telefonoa, jaiotzeData, email) VALUES ('$izenAbizenak', '$NAN', '$telefonoa', '$jaiotzeData', '$email')";
-        if (mysqli_query($conn, $query)) {
+        // Prepare and bind for the first insert
+        $stmt = $conn->prepare("INSERT INTO usuarios (izenAbizenak, NAN, telefonoa, jaiotzeData, email) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email);
+    
+        // Execute the first statement
+        if ($stmt->execute()) {
             echo "Registration successful!";
         } else {
-            echo "Error: " . mysqli_error($conn);
+            echo "Error: " . $stmt->error;
         }
+    
+        // Close the first statement
+        $stmt->close();
+    
+        // Prepare and bind for the second insert
+        $stmt = $conn->prepare("INSERT INTO erabiltzaileak (erabiltzailea, pasahitza) VALUES (?, ?)");
+        $stmt->bind_param("ss", $erabiltzailea, $pasahitza);
+    
+        // Execute the second statement
+        if ($stmt->execute()) {
+            echo "Registration successful!";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+    
+        // Close the second statement
+        $stmt->close(); // DO I HAVE TO CLOSE IT???
     }
 }
 

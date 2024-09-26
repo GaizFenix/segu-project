@@ -1,5 +1,5 @@
 <?php
-// include '/includes/dbConnect.php'; // CURRENTLY NOT WORKING
+include 'includes/dbConnect.php'; // CURRENTLY NOT WORKING
 ?>
 
 <!DOCTYPE html>
