@@ -1,8 +1,11 @@
 # Use the official PHP image with Apache
 FROM php:7.2.2-apache
 
-# Install the mysqli extension
-RUN docker-php-ext-install mysqli
+# Install and enable the mysqli extension
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+
+# Uncomment a specific line in php.ini
+RUN sed -i 's/;extension=mysqli/extension=mysqli/' /usr/local/etc/php/php.ini
 
 # Copy the application files to the Apache document root
 COPY ./app /var/www/html
