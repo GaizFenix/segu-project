@@ -47,13 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->close();
     
         // Prepare and bind for the second insert
-        $stmt = $conn->prepare("INSERT INTO ERABILTZAILEAK (erabiltzailea, pasahitza) VALUES (?, ?)");
+        $stmt = $conn->prepare("INSERT INTO ERABILTZAILEAK (erabiltzailea, pasahitza, NAN) VALUES (?, ?, ?)");
         
         if ($stmt === false) {
             echo "Prepare failed: " . $conn->error;
         }
         
-        $stmt->bind_param("ss", $erabiltzailea, $hashed_password);
+        $stmt->bind_param("sss", $erabiltzailea, $hashed_password, $NAN);
     
         // Execute the second statement
         if ($stmt->execute()) {
