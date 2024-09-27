@@ -1,5 +1,37 @@
 <?php
-include 'includes/dbConnect.php';
+    include 'includes/dbConnect.php';
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Retrieve form data
+        $erabiltzailea = $_POST['erabiltzailea'];
+        $pasahitza = $_POST['pasahitza'];
+
+        // Prepare and bind
+        $stmt = $conn->prepare("SELECT pasahitza FROM erabiltzaileak WHERE erabiltzailea = ?");
+        $stmt->bind_param("s", $erabiltzailea);
+
+        // Execute the statement
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // Check if user exists
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            // Verify password
+            if (password_verify($pasahitza, $row['pasahitza'])) {
+                echo "Login successful!";
+                // Redirect or start session here
+            } else {
+                echo "Invalid password.";
+            }
+        } else {
+            echo "No user found with that username.";
+        }
+
+        // Close the statement and connection
+        $stmt->close();
+        $conn->close();
+    }
 ?>
 
 <!DOCTYPE html>
@@ -19,41 +51,6 @@ include 'includes/dbConnect.php';
     <input type="password" id="pasahitza" name="pasahitza" placeholder="Sartu zure pasahitza" required><br>
     <input id="login_submit" type="submit" value="Login">
 </form>
-
-<<?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data
-    $erabiltzailea = $_POST['erabiltzailea'];
-    $pasahitza = $_POST['pasahitza'];
-
-    // Prepare and bind
-    $stmt = $conn->prepare("SELECT pasahitza FROM erabiltzaileak WHERE erabiltzailea = ?");
-    $stmt->bind_param("s", $erabiltzailea);
-
-    // Execute the statement
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    // Check if user exists
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        // Verify password
-        if (password_verify($pasahitza, $row['pasahitza'])) {
-            echo "Login successful!";
-            // Redirect or start session here
-        } else {
-            echo "Invalid password.";
-        }
-    } else {
-        echo "No user found with that username.";
-    }
-
-    // Close the statement and connection
-    $stmt->close();
-    $conn->close();
-}
-
-?>
 
 </body>
 </html>

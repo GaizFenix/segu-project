@@ -1,5 +1,26 @@
 <?php
-include 'includes/dbConnect.php'; // CURRENTLY NOT WORKING
+    include 'includes/dbConnect.php';
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Retrieve form data
+        $izena = $_POST['izena'];
+        $marka = $_POST['marka'];
+        $modeloa = $_POST['modeloa'];
+        $serieZenbakia = $_POST['serieZenbakia'];
+        $kokalekua = $_POST['kokalekua'];
+
+        // Insert data into the database using prepared statements | CHECK WITH DATABASE
+        $stmt = $conn->prepare("INSERT INTO usuarios (izena, marka, modeloa, serieZenbakia, kokalekua) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua);
+
+        if ($stmt->execute()) {
+            echo "Registration successful!";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+
+        $stmt->close();
+    }
 ?>
 
 <!DOCTYPE html>
@@ -33,29 +54,3 @@ include 'includes/dbConnect.php'; // CURRENTLY NOT WORKING
     
 </body>
 </html>
-
-<?php
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data
-    $izena = $_POST['izena'];
-    $marka = $_POST['marka'];
-    $modeloa = $_POST['modeloa'];
-    $serieZenbakia = $_POST['serieZenbakia'];
-    $kokalekua = $_POST['kokalekua'];
-
-    // Insert data into the database using prepared statements | CHECK WITH DATABASE
-    $stmt = $conn->prepare("INSERT INTO usuarios (izena, marka, modeloa, serieZenbakia, kokalekua) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua);
-
-    if ($stmt->execute()) {
-        echo "Registration successful!";
-    } else {
-        echo "Error: " . $stmt->error;
-    }
-
-    $stmt->close();
-}
-
-$conn->close();
-
-?>
