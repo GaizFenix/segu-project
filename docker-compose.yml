@@ -2,8 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: php:7.2.2-apache
-    container_name: php-web
+    image: web
     environment:
       - ALLOW_OVERRIDE=true
     ports:
@@ -11,13 +10,10 @@ services:
     links:
       - db
     volumes:
-      - ./app:/var/www/html/ # DEFAULT APACHE PATH
-    depends_on:
-      - db
+      - ./app:/var/www/html/
 
   db:
     image: mariadb:10.8.2
-    container_name: mariadb
     restart: always
     volumes:
       - ./mysql:/var/lib/mysql
@@ -25,7 +21,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: admin
       MYSQL_PASSWORD: test
-      MYSQL_DATABASE: euskadigital
+      MYSQL_DATABASE: database
     ports:
       - "8889:3306"
 
@@ -38,4 +34,4 @@ services:
     environment:
       MYSQL_USER: admin
       MYSQL_PASSWORD: test
-      MYSQL_DATABASE: euskadigital
+      MYSQL_DATABASE: database
