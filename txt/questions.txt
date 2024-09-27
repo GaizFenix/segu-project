@@ -3,6 +3,6 @@ DONE - Ez dau garrantziarik | PHP kodea "garbia" da?
 DONE - Nahi dugun tokian jarri daiteke, gomendagarria beste artxibo batean | index.php-ren kodea (SQL konexioa) hor geratu behar da edo dbConnect.php artxiboan sartu dezaket?
 DONE - Erabiltzaileen erregistroan, "username" eta "pass" kanpoak gehitu | Nola erregistratu erabiltzaile eta pasahitzak gero saioa hasteko?
 
-Called to unknown function mysqli()?
+DONE - include must be with the php code snipet that uses it | Called to unknown function mysqli()?
 Edonork aldatu ditzazke erabiltzaile baten datuak edo berak soilik saioa hasi ostean?
 Zergatik beharrezkoa show_user sortzea ez badira erabiltzaileak ikuskatzen (soilik gehitzen eta aldatzen)?
