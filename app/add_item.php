@@ -10,7 +10,7 @@
         $kokalekua = $_POST['kokalekua'];
 
         // Insert data into the database using prepared statements | CHECK WITH DATABASE
-        $stmt = $conn->prepare("INSERT INTO usuarios (izena, marka, modeloa, serieZenbakia, kokalekua) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO inbentarioa (izena, marka, modeloa, serieZenbakia, kokalekua) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param("sssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua);
 
         if ($stmt->execute()) {

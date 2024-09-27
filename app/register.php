@@ -28,12 +28,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "Invalid NAN.";
     } else {
         // Prepare and bind for the first insert
-        $stmt = $conn->prepare("INSERT INTO usuarios (izenAbizenak, NAN, telefonoa, jaiotzeData, email) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO PERTSONAK (izenAbizenak, NAN, telefonoa, jaiotzeData, email) VALUES (?, ?, ?, ?, ?)");
+        
+        if ($stmt === false) {
+            echo "Prapare failed: " . $conn->error;
+        }
+        
         $stmt->bind_param("sssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email);
     
         // Execute the first statement
         if ($stmt->execute()) {
-            echo "Data registration successful!";
+            echo "Datuak gorde dira!";
         } else {
             echo "Error: " . $stmt->error;
         }
@@ -42,12 +47,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->close();
     
         // Prepare and bind for the second insert
-        $stmt = $conn->prepare("INSERT INTO erabiltzaileak (erabiltzailea, pasahitza) VALUES (?, ?)");
-        $stmt->bind_param("ss", $erabiltzailea, $$hashed_password);
+        $stmt = $conn->prepare("INSERT INTO ERABILTZAILEAK (erabiltzailea, pasahitza) VALUES (?, ?)");
+        
+        if ($stmt === false) {
+            echo "Prepare failed: " . $conn->error;
+        }
+        
+        $stmt->bind_param("ss", $erabiltzailea, $hashed_password);
     
         // Execute the second statement
         if ($stmt->execute()) {
-            echo "User and password registration successful!";
+            echo "Erabiltzaile eta pasahitza gorde dira!";
         } else {
             echo "Error: " . $stmt->error;
         }

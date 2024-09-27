@@ -7,8 +7,12 @@
         $pasahitza = $_POST['pasahitza'];
 
         // Prepare and bind
-        $stmt = $conn->prepare("SELECT pasahitza FROM erabiltzaileak WHERE erabiltzailea = ?");
+        $stmt = $conn->prepare("SELECT pasahitza FROM ERABILTZAILEAK WHERE erabiltzailea = ?");
         $stmt->bind_param("s", $erabiltzailea);
+
+        if ($stmt === false) {
+            echo "Prepare failed: " . $conn->error;
+        }
 
         // Execute the statement
         $stmt->execute();
@@ -28,9 +32,8 @@
             echo "No user found with that username.";
         }
 
-        // Close the statement and connection
+        // Close the statement
         $stmt->close();
-        $conn->close();
     }
 ?>
 
