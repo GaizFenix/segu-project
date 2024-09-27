@@ -1,5 +1,61 @@
 <?php
-include 'includes/dbConnect.php'; // CURRENTLY NOT WORKING
+
+include 'includes/dbConnect.php'; // The include must be with the database connection
+
+function validateNAN($nan) {
+    $numbers = substr($nan, 0, 8);
+    $letter = substr($nan, -1);
+    $validLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
+    $calculatedLetter = $validLetters[$numbers % 23];
+    return $calculatedLetter === $letter;
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Retrieve form data
+    $izenAbizenak = $_POST['izenAbizenak'];
+    $NAN = $_POST['NAN'];
+    $telefonoa = $_POST['telefonoa'];
+    $jaiotzeData = $_POST['jaiotzeData'];
+    $email = $_POST['email'];
+    $erabiltzailea = $_POST['erabiltzailea'];
+    $pasahitza = $_POST['pasahitza'];
+
+    // Apply a hash function to the password
+    $hashed_password = password_hash($pasahitza, PASSWORD_BCRYPT);
+
+    // Validate NAN
+    if (!validateNAN($NAN)) {
+        echo "Invalid NAN.";
+    } else {
+        // Prepare and bind for the first insert
+        $stmt = $conn->prepare("INSERT INTO usuarios (izenAbizenak, NAN, telefonoa, jaiotzeData, email) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email);
+    
+        // Execute the first statement
+        if ($stmt->execute()) {
+            echo "Data registration successful!";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+    
+        // Close the first statement
+        $stmt->close();
+    
+        // Prepare and bind for the second insert
+        $stmt = $conn->prepare("INSERT INTO erabiltzaileak (erabiltzailea, pasahitza) VALUES (?, ?)");
+        $stmt->bind_param("ss", $erabiltzailea, $$hashed_password);
+    
+        // Execute the second statement
+        if ($stmt->execute()) {
+            echo "User and password registration successful!";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+    
+        // Close the second statement
+        $stmt->close();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -24,8 +80,8 @@ include 'includes/dbConnect.php'; // CURRENTLY NOT WORKING
         });
     </script>
 </head>
-<body>
 
+<body>
 <h2>Register</h2>
 <form id="register_form" action="register.php" method="post">
     <label for="izenAbizenak">Izen-abizenak:</label>
@@ -52,9 +108,6 @@ include 'includes/dbConnect.php'; // CURRENTLY NOT WORKING
 
     <input id="register_submit" type="submit" value="Erregistratu">
 </form>
-    
-</body>
-</html>
 
 <!-- ONLY ALLOWS LETTERS AND SPACES ON IZENABIZENAK -->
 <script> 
@@ -183,61 +236,5 @@ document.getElementById('email').addEventListener('input', function (event) {
 });
 </script>
 
-<!-- ALGORITHM TO VALIDATE NAN LETTER -->
-<?php
-function validateNAN($nan) {
-    $numbers = substr($nan, 0, 8);
-    $letter = substr($nan, -1);
-    $validLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
-    $calculatedLetter = $validLetters[$numbers % 23];
-    return $calculatedLetter === $letter;
-}
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data
-    $izenAbizenak = $_POST['izenAbizenak'];
-    $NAN = $_POST['NAN'];
-    $telefonoa = $_POST['telefonoa'];
-    $jaiotzeData = $_POST['jaiotzeData'];
-    $email = $_POST['email'];
-    $erabiltzailea = $_POST['erabiltzailea'];
-    $pasahitza = $_POST['pasahitza'];
-
-    // Apply a hash function to the password
-    $hashed_password = password_hash($pasahitza, PASSWORD_BCRYPT);
-
-    // Validate NAN
-    if (!validateNAN($NAN)) {
-        echo "Invalid NAN.";
-    } else {
-        // Prepare and bind for the first insert
-        $stmt = $conn->prepare("INSERT INTO usuarios (izenAbizenak, NAN, telefonoa, jaiotzeData, email) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email);
-    
-        // Execute the first statement
-        if ($stmt->execute()) {
-            echo "Data registration successful!";
-        } else {
-            echo "Error: " . $stmt->error;
-        }
-    
-        // Close the first statement
-        $stmt->close();
-    
-        // Prepare and bind for the second insert
-        $stmt = $conn->prepare("INSERT INTO erabiltzaileak (erabiltzailea, pasahitza) VALUES (?, ?)");
-        $stmt->bind_param("ss", $erabiltzailea, $$hashed_password);
-    
-        // Execute the second statement
-        if ($stmt->execute()) {
-            echo "User and password registration successful!";
-        } else {
-            echo "Error: " . $stmt->error;
-        }
-    
-        // Close the second statement
-        $stmt->close();
-    }
-}
-
-?>
+</body>
+</html>
