@@ -55,5 +55,17 @@
     <input id="login_submit" type="submit" value="Login">
 </form>
 
+<script>
+    document.getElementById('erabiltzailea').addEventListener('input', function(event) {
+        var input = event.target;
+        var value = input.value;
+
+        // Allow a maximum of 250 characters
+        if (value.length > 250) {
+            input.value = value.slice(0, 250);
+        }
+    });
+</script>
+
 </body>
 </html>

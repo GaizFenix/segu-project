@@ -54,7 +54,7 @@ CREATE TABLE `INBENTARIOA` (
   `marka` varchar(255) NOT NULL,
   `modeloa` varchar(255) NOT NULL,
   `serieZenbakia` varchar(255) NOT NULL,
-  `kokalekua` varchar(255) NOT NULL,
+  `kokalekua` varchar(255),
   PRIMARY KEY (`serieZenbakia`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 --

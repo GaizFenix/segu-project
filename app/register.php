@@ -119,12 +119,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <input id="register_submit" type="submit" value="Erregistratu">
 </form>
 
-<!-- ONLY ALLOWS LETTERS AND SPACES ON IZENABIZENAK -->
+<!-- ONLY ALLOWS LETTERS AND SPACES ON IZENABIZENAK, MAX 250 CHARACTERS -->
 <script> 
 document.getElementById('izenAbizenak').addEventListener('input', function (event) {
     var input = event.target;
     var value = input.value;
-    input.value = value.replace(/[^a-zA-Z\s]/g, '');
+    // Remove any character that is not a letter or space
+    value = value.replace(/[^a-zA-Z\s]/g, '');
+    // Truncate the value to 250 characters if it exceeds the limit
+    if (value.length > 250) {
+        value = value.slice(0, 250);
+    }
+    input.value = value;
 });
 </script>
 
@@ -134,16 +140,18 @@ document.getElementById('NAN').addEventListener('input', function (event) {
     var input = event.target;
     var value = input.value.toUpperCase().replace(/[^0-9A-Z-]/g, ''); // Allow only numbers, letters, and hyphen
 
-    // Split the value into parts before and after the hyphen
-    var parts = value.split('-');
-    var numbers = parts[0].slice(0, 8).replace(/[^0-9]/g, ''); // Allow only numbers before the hyphen
-    var letter = parts[1] ? parts[1].slice(0, 1).replace(/[^A-Z]/g, '') : ''; // Allow only letters after the hyphen
+    // Remove the hyphen if it exists
+    value = value.replace('-', '');
+
+    // Split the value into numbers and letter
+    var numbers = value.slice(0, 8).replace(/[^0-9]/g, ''); // Allow only numbers before the hyphen
+    var letter = value.slice(8, 9).replace(/[^A-Z]/g, ''); // Allow only letters after the hyphen
 
     // Reconstruct the value with the hyphen
     if (numbers.length === 8) {
         value = numbers + '-' + letter;
     } else {
-        value = numbers;
+        value = numbers + letter;
     }
 
     input.value = value;
@@ -159,6 +167,18 @@ document.getElementById('NAN').addEventListener('input', function (event) {
         }
     } else {
         input.setCustomValidity('Invalid format. Use 11111111-Z');
+    }
+});
+
+document.getElementById('NAN').addEventListener('keydown', function (event) {
+    var input = event.target;
+    var value = input.value;
+
+    // Allow backspace and delete keys to remove the hyphen
+    if (event.key === 'Backspace' || event.key === 'Delete') {
+        if (value.endsWith('-')) {
+            input.value = value.slice(0, -1); // Remove the hyphen
+        }
     }
 });
 </script>
@@ -243,6 +263,13 @@ document.getElementById('email').addEventListener('input', function (event) {
     } else {
         input.setCustomValidity('');
     }
+
+    // Only allow a maximum of 250 characters
+    if (value.length > 250) {
+        value = value.slice(0, 250);
+    }
+
+    input.value = value;
 });
 </script>
 

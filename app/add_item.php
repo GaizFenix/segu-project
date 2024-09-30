@@ -51,6 +51,90 @@
 
     <input id="item_add_submit" type="submit" value="Txertatu">
 </form>
+
+<!-- THE NECESSARY FIELDS MUST BE FULL | MAX LENGTH OF 250 CHARS -->
+<script>
+    // Izena field
+    document.getElementById('izena').addEventListener('input', function(event) {
+        var input = event.target;
+        var value = input.value;
+
+        if (value.length > 0) {
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity('Izena beharrezkoa da.');
+        }
+
+        if (value.length > 250) {
+            input.value = value.slice(0, 250);
+        }
+    });
+</script>
+
+<script>
+    // Marka field
+    document.getElementById('marka').addEventListener('input', function(event) {
+        var input = event.target;
+        var value = input.value;
+
+        if (value.length > 0) {
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity('Marka beharrezkoa da.');
+        }
+
+        if (value.length > 250) {
+            input.value = value.slice(0, 250);
+        }
+    });
+</script>
+
+<script>
+    // Modeloa field
+    document.getElementById('modeloa').addEventListener('input', function(event) {
+        var input = event.target;
+        var value = input.value;
+
+        if (value.length > 0) {
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity('Modeloa beharrezkoa da.');
+        }
+
+        if (value.length > 250) {
+            input.value = value.slice(0, 250);
+        }
+    });
+</script>
+
+<script>
+    // Serie Zenbakia field
+    document.getElementById('serieZenbakia').addEventListener('input', function(event) {
+        var input = event.target;
+        var value = input.value;
+
+        if (value.length > 0) {
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity('Serie Zenbakia beharrezkoa da.');
+        }
+
+        if (value.length > 250) {
+            input.value = value.slice(0, 250);
+        }
+    });
+</script>
+
+<script>
+    // Kokalekua field | EZ BEHARREZKOA DB-an
+    document.getElementById('kokalekua').addEventListener('input', function(event) {
+        var input = event.target;
+        var value = input.value;
+
+        if (value.length > 250) {
+            input.value = value.slice(0, 250);
+        }
+    });
     
 </body>
 </html>
