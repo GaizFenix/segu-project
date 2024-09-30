@@ -1,12 +1,3 @@
-<?php
-
-include 'includes/dbConnect.php';
-
-// Fetch users from the database
-$sql = "SELECT erabiltzailea FROM ERABILTZAILEAK";
-$result = $conn->query($sql);
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,6 +44,13 @@ $result = $conn->query($sql);
             <th>Username</th>
         </tr>
         <?php
+
+        include 'includes/dbConnect.php';
+
+        // Fetch users from the database
+        $sql = "SELECT erabiltzailea FROM ERABILTZAILEAK";
+        $result = $conn->query($sql);
+
         if ($result->num_rows > 0) {
             while($row = $result->fetch_assoc()) {
                 $username = $row['erabiltzailea'];
@@ -66,6 +64,7 @@ $result = $conn->query($sql);
             echo "<tr><td colspan='3'>No users found</td></tr>";
         }
         ?>
+        
     </table>
 </body>
 </html>
