@@ -2,6 +2,14 @@
 
 include 'includes/dbConnect.php';
 
+function validateNAN($nan) {
+    $numbers = substr($nan, 0, 8);
+    $letter = substr($nan, -1);
+    $validLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
+    $calculatedLetter = $validLetters[$numbers % 23];
+    return $calculatedLetter === $letter;
+}
+
 // Get the username from the URL
 $erabiltzailea = isset($_GET['user']) ? $_GET['user'] : '';
 
@@ -61,9 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_modify_submit']))
 
         
     }
-    // Redirect to the user list page
-    header("Location: show_all_users.php");
-    exit;
 }
 
 ?>
@@ -93,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_modify_submit']))
 <body>
     <div class="container">
         <h2>Modify User</h2>
-        <form id="user_modify_form" action="modify_user.php?user=<?php echo urlencode($user); ?>" method="post">            
+        <form id="user_modify_form" action="modify_user.php?user=<?php echo urlencode($erabiltzailea); ?>" method="post">            
             <label for="izenAbizenak">Izen-abizenak:</label>
             <input type="text" id="izenAbizenak" name="izenAbizenak" value="<?php echo htmlspecialchars($userData['izenAbizenak']); ?>" required><br>
     
@@ -109,9 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_modify_submit']))
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($userData['email']); ?>" required><br>
     
-            <a href="show_all_users.php">
-            <input id="user_modify_submit" type="submit" value="save">
-            </a>
+            <input id="user_modify_submit" type="submit" name="user_modify_submit" value="save">
         </form>
     </div>
 
