@@ -10,7 +10,12 @@
         $kokalekua = $_POST['kokalekua'];
 
         // Insert data into the database using prepared statements | CHECK WITH DATABASE
-        $stmt = $conn->prepare("INSERT INTO inbentarioa (izena, marka, modeloa, serieZenbakia, kokalekua) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO INBENTARIOA (izena, marka, modeloa, serieZenbakia, kokalekua) VALUES (?, ?, ?, ?, ?)");
+
+        if ($stmt === false) {
+            echo "Prepare failed: " . $conn->error;
+        }
+
         $stmt->bind_param("sssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua);
 
         if ($stmt->execute()) {
@@ -44,7 +49,7 @@
     <input type="text" id="modeloa" name="modeloa" placeholder="adib.: SM-48" required><br>
 
     <label for="serieZenbakia">Serie Zenbakia:</label>
-    <input type="text" id="serieZenbakia" name="seriaZenbakia" placeholder="adib.: 0000ABC" required><br>
+    <input type="text" id="serieZenbakia" name="serieZenbakia" placeholder="adib.: 0000ABC" required><br>
 
     <label for="kokalekua">Kokalekua:</label>
     <input type="text" id="kokalekua" name="kokalekua" placeholder="adib.: Kolaboragailuak 2 setup-ean" required><br>

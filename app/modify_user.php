@@ -27,20 +27,26 @@ if ($erabiltzailea) {
 }
 
 // Handle form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['save'])) {
-        $izenAbizenak = $_POST['izenAbizenak'];
-        $NAN = $_POST['NAN'];
-        $telefonoa = $_POST['telefonoa'];
-        $jaiotzeData = $_POST['jaiotzeData'];
-        $email = $_POST['email'];
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_modify_submit'])) {
+    $izenAbizenak = $_POST['izenAbizenak'];
+    $NAN = $_POST['NAN'];
+    $telefonoa = $_POST['telefonoa'];
+    $jaiotzeData = $_POST['jaiotzeData'];
+    $email = $_POST['email'];
 
+    if (!validateNAN($NAN)) {
+        echo "Invalid NAN.";
+    } else {
         // Update user data in the database
         $stmt = $conn->prepare("
             UPDATE PERTSONAK 
             SET izenAbizenak = ?, NAN = ?, telefonoa = ?, jaiotzeData = ?, email = ? 
             WHERE NAN = (SELECT NAN FROM ERABILTZAILEAK WHERE erabiltzailea = ?)
-        ");        
+        ");
+
+        if ($stmt === false) {
+            echo "Prepare failed: " . $conn->error;
+        }
         
         $stmt->bind_param("ssssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email, $erabiltzailea);
 
@@ -52,15 +58,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Close the statement
         $stmt->close();
-    } elseif (isset($_POST['cancel'])) {
-        // Redirect to show_all_users.php without saving changes
-        header("Location: show_all_users.php");
-        exit;
+
+        
     }
+    // Redirect to the user list page
+    header("Location: show_all_users.php");
+    exit;
 }
 
-// Close the connection
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -104,12 +109,9 @@ $conn->close();
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($userData['email']); ?>" required><br>
     
-            <br>
-            <label for="erabiltzailea">Erabiltzailea:</label>
-            <input type="text" id="erabiltzailea" name="erabiltzailea" value="<?php echo htmlspecialchars($erabiltzailea); ?>" required><br>
-    
-            <button type="submit" id="user_modify_submit" value="save">Gorde</button>
-            <button type="submit" id="user_modify_cancel" value="cancel">Deuseztatu</button>
+            <a href="show_all_users.php">
+            <input id="user_modify_submit" type="submit" value="save">
+            </a>
         </form>
     </div>
 
