@@ -55,53 +55,116 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modify User</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        // Define the Basque locale
-        flatpickr.localize({
-            weekdays: {
-                shorthand: ['Al.', 'Ar.', 'Az.', 'Og.', 'Ol.', 'La.', 'Ig.'],
-                longhand: ['Astelehena', 'Asteartea', 'Asteazkena', 'Osteguna', 'Ostirala', 'Larunbata', 'Igandea']
-            },
-            months: {
-                shorthand: ['Urt.', 'Ots.', 'Mar.', 'Api.', 'Mai.', 'Eka.', 'Uzt.', 'Abu.', 'Ira.', 'Urr.', 'Aza.', 'Abe.'],
-                longhand: ['Urtarrila', 'Otsaila', 'Martxoa', 'Apirila', 'Maiatza', 'Ekaina', 'Uztaila', 'Abuztua', 'Iraila', 'Urria', 'Azaroa', 'Abendua']
-            },
-        });
-    </script>
+    <title>Modify item</title>
 </head>
 <body>
-    <div class="container">
-        <h2>Modify item</h2>
-        <form id="item_modify_form" action="modify_item.php?user=<?php echo urlencode($erabiltzailea); ?>" method="post">            
-            <label for="erabiltzailea">Erabiltzailea:</label>
-            <input id="erabiltzailea" type="text" name="erabiltzailea" placeholder="Sartu zure erabiltzailea" required>
+<h2>Modify item</h2>
+<form id="item_modify_form" action="modify_item.php?user=<?php echo urlencode($erabiltzailea); ?>" method="post">            
+    <label for="Izena">Izen:</label>
+    <input id="Izena" type="text" name="Izena" placeholder="Sartu izen berria" required>
 
-            <label for="pasahitza">Pasahitza:</label>
-            <input id="pasahitza" type="password" name="pasahitza" placeholder="Sartu zure pasahitza" required>
+    <label for="marka">Marka:</label>
+    <input id="marka" type="text" name="marka" placeholder="Sartu marka berria" required>
 
-            <label for="Izena">Izen:</label>
-            <input id="Izena" type="text" name="Izena" placeholder="Sartu izen berria" required>
+    <label for="modeloa">Modeloa:</label>
+    <input id="modeloa" type="text" name="modeloa" placeholder="Sartu modelo berria" required>
 
-            <label for="marka">Marka:</label>
-            <input id="marka" type="text" name="marka" placeholder="Sartu marka berria" required>
+    <label for="serieZenbakia">SerieZenbakia:</label>
+    <input id="serieZenbakia" type="text" name="serieZenbakia" placeholder="Sartu serie zenbakia berria" required>
 
-            <label for="modeloa">Modeloa:</label>
-            <input id="modeloa" type="text" name="modeloa" placeholder="Sartu modelo berria" required>
-
-            <label for="serieZenbakia">SerieZenbakia:</label>
-            <input id="serieZenbakia" type="text" name="serieZenbakia" placeholder="Sartu serie zenbakia berria" required>
-
-            <label for="kokalekua">Kokalekua:</label>
-            <input id="kokalekua" type="text" name="kokalekua" placeholder="Sartu kokaleku berri" required>
+    <label for="kokalekua">Kokalekua:</label>
+    <input id="kokalekua" type="text" name="kokalekua" placeholder="Sartu kokaleku berri" required>
             
-            <label  for="originalSerieZenbakia">Original SerieZenbakia:</label>
-            <input id="originalSerieZenbakia" type="text" name="originalSerieZenbakia" value="<?php echo htmlspecialchars($itemData['serieZenbakia']); ?>">
+    <label  for="originalSerieZenbakia">Original SerieZenbakia:</label>
+    <input id="originalSerieZenbakia" type="text" name="originalSerieZenbakia" value="<?php echo htmlspecialchars($itemData['serieZenbakia']); ?>">
     
-            <input id="item_modify_submit" type="submit" name="item_modify_submit" value="save">
-        </form>
-    </div>
+    <input id="item_modify_submit" type="submit" name="item_modify_submit" value="save">
+</form>
+
+<script>
+    // Izena field
+    document.getElementById('izena').addEventListener('input', function(event) {
+        var input = event.target;
+        var value = input.value;
+
+        if (value.length > 0) {
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity('Izena beharrezkoa da.');
+        }
+
+        if (value.length > 250) {
+            input.value = value.slice(0, 250);
+        }
+    });
+</script>
+
+<script>
+    // Marka field
+    document.getElementById('marka').addEventListener('input', function(event) {
+        var input = event.target;
+        var value = input.value;
+
+        if (value.length > 0) {
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity('Marka beharrezkoa da.');
+        }
+
+        if (value.length > 250) {
+            input.value = value.slice(0, 250);
+        }
+    });
+</script>
+
+<script>
+    // Modeloa field
+    document.getElementById('modeloa').addEventListener('input', function(event) {
+        var input = event.target;
+        var value = input.value;
+
+        if (value.length > 0) {
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity('Modeloa beharrezkoa da.');
+        }
+
+        if (value.length > 250) {
+            input.value = value.slice(0, 250);
+        }
+    });
+</script>
+
+<script>
+    // Serie Zenbakia field
+    document.getElementById('serieZenbakia').addEventListener('input', function(event) {
+        var input = event.target;
+        var value = input.value;
+
+        if (value.length > 0) {
+            input.setCustomValidity('');
+        } else {
+            input.setCustomValidity('Serie Zenbakia beharrezkoa da.');
+        }
+
+        if (value.length > 250) {
+            input.value = value.slice(0, 250);
+        }
+    });
+</script>
+
+<script>
+    // Kokalekua field | EZ BEHARREZKOA DB-an
+    document.getElementById('kokalekua').addEventListener('input', function(event) {
+        var input = event.target;
+        var value = input.value;
+
+        if (value.length > 250) {
+            input.value = value.slice(0, 250);
+        }
+    });
+</body>
+</html>
+
        
         
