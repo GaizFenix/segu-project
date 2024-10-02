@@ -29,11 +29,17 @@ if($originalSerieZenbakia) {
         echo "Item not found.";
         exit;
     }
+
+    // Close the statement
+    $stmt->close();
+} else {
+    echo "No item specified.";
+    exit;
 }
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit'])) {      
-    $izena = $_POST['Izena'];
+    $izena = $_POST['izena'];
     $marka = $_POST['marka'];
     $modeloa = $_POST['modeloa'];
     $serieZenbakia = $_POST['serieZenbakia'];
@@ -99,23 +105,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
 <body>
 <h2>Modify item</h2>
 <form id="item_modify_form" action="modify_item.php?item=<?php echo urlencode($originalSerieZenbakia); ?>" method="post">            
-    <label for="Izena">Izen:</label>
-    <input id="Izena" type="text" name="Izena" placeholder="Sartu izen berria" ><br/>
-    
+    <label for="Izena">Izena:</label>
+    <input id="Izena" type="text" name="Izena" value="Sartu izen berria" ><br/>
 
     <label for="marka">Marka:</label>
-    <input id="marka" type="text" name="marka"  placeholder="<?php echo htmlspecialchars($itemData["marka"]); ?>"><br/>
+    <input id="marka" type="text" name="marka" value="<?php echo htmlspecialchars($itemData["marka"]); ?>"><br/>
 
     <label for="modeloa">Modeloa:</label>
-    <input id="modeloa" type="text" name="modeloa" placeholder="<?php echo htmlspecialchars($itemData["modeloa"]); ?>"><br/>
+    <input id="modeloa" type="text" name="modeloa" value="<?php echo htmlspecialchars($itemData["modeloa"]); ?>"><br/>
 
-    <label for="serieZenbakia">SerieZenbakia:</label>
-    <input id="serieZenbakia" type="text" name="serieZenbakia" placeholder="<?php echo htmlspecialchars($itemData["serieZenbakia"]); ?>"><br/>
+    <label for="serieZenbakia">Serie Zenbakia:</label>
+    <input id="serieZenbakia" type="text" name="serieZenbakia" value="<?php echo htmlspecialchars($itemData["serieZenbakia"]); ?>"><br/>
 
     <label for="kokalekua">Kokalekua:</label>
-    <input id="kokalekua" type="text" name="kokalekua" placeholder="<?php echo htmlspecialchars($itemData["kokalekua"]); ?>"><br/>
+    <input id="kokalekua" type="text" name="kokalekua" value="<?php echo htmlspecialchars($itemData["kokalekua"]); ?>"><br/>
     
-    <input id="item_modify_submit" type="submit" name="item_modify_submit" value="save"><br/>
+    <input id="item_modify_submit" type="submit" name="item_modify_submit" value="Gorde"><br/>
 </form>
 
 <script>

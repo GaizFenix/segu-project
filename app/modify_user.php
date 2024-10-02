@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_modify_submit']))
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($userData['email']); ?>" required><br>
     
-            <input id="user_modify_submit" type="submit" name="user_modify_submit" value="save">
+            <input id="user_modify_submit" type="submit" name="user_modify_submit" value="Gorde">
         </form>
     </div>
 
