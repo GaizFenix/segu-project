@@ -2,6 +2,8 @@
 
 include 'includes/dbConnect.php';
 
+
+
 //See if the new serial number is unique
 function isSerieZenbakiaUnique($serieZenbakia) {
     global $conn;
@@ -12,42 +14,79 @@ function isSerieZenbakiaUnique($serieZenbakia) {
     return $stmt->num_rows === 0;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit'])) {      
-        $izena = $_POST['Izena'];
-        $marka = $_POST['marka'];
-        $modeloa = $_POST['modeloa'];
-        $serieZenbakia = $_POST['serieZenbakia'];
-        $kokalekua = $_POST['kokalekua'];
-        $originalSerieZenbakia = $_POST['originalSerieZenbakia']; // Add a hidden input field in the form to hold the original serieZenbakia
-        
-        //See if serial number is unique and change the data in the database
-        if (!isSerieZenbakiaUnique($serieZenbakia)) {
-            echo "Serie zenbakia ez da unikoa.";
-            exit;
-        }else{
-            $stmt = $conn->prepare("
-                UPDATE INBENTARIOA 
-                SET izena = ?, marka = ?, modeloa = ?, serieZenbakia = ?, kokalekua = ? 
-                WHERE serieZenbakia = ?
-            ");
+$originalSerieZenbakia = isset($_GET['item']) ? $_GET['item'] : '';
 
-            if ($stmt === false) {
-                echo "Prepare failed: " . $conn->error;
-                exit;
-            }
+// Fetch the current item data from the database
+if($originalSerieZenbakia) {
+    $stmt = $conn->prepare("SELECT izena, marka, modeloa, serieZenbakia, kokalekua FROM INBENTARIOA WHERE serieZenbakia = ?");
+    $stmt->bind_param("s", $originalSerieZenbakia);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-            $stmt->bind_param("ssssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua, $originalSerieZenbakia);
-
-            if ($stmt->execute()) {
-                echo "Item data updated successfully.";
-            } else {
-                echo "Error: " . $stmt->error;
-            }
-
-            $stmt->close();
-        }
+    if($result->num_rows > 0) {
+        $itemData = $result->fetch_assoc();
+    } else {
+        echo "Item not found.";
+        exit;
+    }
 }
 
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit'])) {      
+    $izena = $_POST['Izena'];
+    $marka = $_POST['marka'];
+    $modeloa = $_POST['modeloa'];
+    $serieZenbakia = $_POST['serieZenbakia'];
+    $kokalekua = $_POST['kokalekua'];
+    $originalSerieZenbakia = $_GET['item'];
+    
+    // Check if any of the POST values are null and replace them with the current database values
+    if (empty($izena)) {
+        $izena = $itemData['izena'];
+    }
+    if (empty($marka)) {
+        $marka = $itemData['marka'];
+    }
+    if (empty($modeloa)) {
+        $modeloa = $itemData['modeloa'];
+    }
+    if (empty($serieZenbakia)) {
+        $serieZenbakia = $itemData['serieZenbakia'];
+    }
+    if (empty($kokalekua)) {
+        $kokalekua = $itemData['kokalekua'];
+    }
+    $originalSerieZenbakia = $_GET['item'];
+    
+    // Add a hidden input field in the form to hold the original serieZenbakia
+    
+    // See if serial number is unique and change the data in the database
+    if (!isSerieZenbakiaUnique($serieZenbakia) && $originalSerieZenbakia !== $serieZenbakia) {
+        echo "Serie zenbakia ez da unikoa.";
+        exit;
+    } else {
+        $stmt = $conn->prepare("
+            UPDATE INBENTARIOA 
+            SET izena = ?, marka = ?, modeloa = ?, serieZenbakia = ?, kokalekua = ? 
+            WHERE serieZenbakia = ?
+        ");
+
+        if ($stmt === false) {
+            echo "Prepare failed: " . $conn->error;
+            exit;
+        }
+
+        $stmt->bind_param("ssssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua, $originalSerieZenbakia);
+
+        if ($stmt->execute()) {
+            echo "Item data updated successfully.";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+
+        $stmt->close();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -59,26 +98,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
 </head>
 <body>
 <h2>Modify item</h2>
-<form id="item_modify_form" action="modify_item.php?user=<?php echo urlencode($erabiltzailea); ?>" method="post">            
+<form id="item_modify_form" action="modify_item.php?item=<?php echo urlencode($originalSerieZenbakia); ?>" method="post">            
     <label for="Izena">Izen:</label>
-    <input id="Izena" type="text" name="Izena" placeholder="Sartu izen berria" required>
+    <input id="Izena" type="text" name="Izena" placeholder="Sartu izen berria" ><br/>
+    
 
     <label for="marka">Marka:</label>
-    <input id="marka" type="text" name="marka" placeholder="Sartu marka berria" required>
+    <input id="marka" type="text" name="marka"  placeholder="<?php echo htmlspecialchars($itemData["marka"]); ?>"><br/>
 
     <label for="modeloa">Modeloa:</label>
-    <input id="modeloa" type="text" name="modeloa" placeholder="Sartu modelo berria" required>
+    <input id="modeloa" type="text" name="modeloa" placeholder="<?php echo htmlspecialchars($itemData["modeloa"]); ?>"><br/>
 
     <label for="serieZenbakia">SerieZenbakia:</label>
-    <input id="serieZenbakia" type="text" name="serieZenbakia" placeholder="Sartu serie zenbakia berria" required>
+    <input id="serieZenbakia" type="text" name="serieZenbakia" placeholder="<?php echo htmlspecialchars($itemData["serieZenbakia"]); ?>"><br/>
 
     <label for="kokalekua">Kokalekua:</label>
-    <input id="kokalekua" type="text" name="kokalekua" placeholder="Sartu kokaleku berri" required>
-            
-    <label  for="originalSerieZenbakia">Original SerieZenbakia:</label>
-    <input id="originalSerieZenbakia" type="text" name="originalSerieZenbakia" value="<?php echo htmlspecialchars($itemData['serieZenbakia']); ?>">
+    <input id="kokalekua" type="text" name="kokalekua" placeholder="<?php echo htmlspecialchars($itemData["kokalekua"]); ?>"><br/>
     
-    <input id="item_modify_submit" type="submit" name="item_modify_submit" value="save">
+    <input id="item_modify_submit" type="submit" name="item_modify_submit" value="save"><br/>
 </form>
 
 <script>
@@ -86,12 +123,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
     document.getElementById('izena').addEventListener('input', function(event) {
         var input = event.target;
         var value = input.value;
-
-        if (value.length > 0) {
-            input.setCustomValidity('');
-        } else {
-            input.setCustomValidity('Izena beharrezkoa da.');
-        }
 
         if (value.length > 250) {
             input.value = value.slice(0, 250);
@@ -105,12 +136,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
         var input = event.target;
         var value = input.value;
 
-        if (value.length > 0) {
-            input.setCustomValidity('');
-        } else {
-            input.setCustomValidity('Marka beharrezkoa da.');
-        }
-
         if (value.length > 250) {
             input.value = value.slice(0, 250);
         }
@@ -123,12 +148,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
         var input = event.target;
         var value = input.value;
 
-        if (value.length > 0) {
-            input.setCustomValidity('');
-        } else {
-            input.setCustomValidity('Modeloa beharrezkoa da.');
-        }
-
         if (value.length > 250) {
             input.value = value.slice(0, 250);
         }
@@ -136,16 +155,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
 </script>
 
 <script>
-    // Serie Zenbakia field
+    // Serie Zenbakia field | 
     document.getElementById('serieZenbakia').addEventListener('input', function(event) {
         var input = event.target;
         var value = input.value;
-
-        if (value.length > 0) {
-            input.setCustomValidity('');
-        } else {
-            input.setCustomValidity('Serie Zenbakia beharrezkoa da.');
-        }
 
         if (value.length > 250) {
             input.value = value.slice(0, 250);
