@@ -1,19 +1,20 @@
 
 ### Web Sistema Lana
+## Egileak:
 Gaizka Carmona, Eneko Martinez, Mikel Aranburu, Ibai Olaziregi eta Egoitz Yuste
 
-### Proiektua Docker bidez hasteko instrukzioak
+## Proiektua Docker bidez hasteko intsrukzioak:
 - **Build the Docker Image**: 
 ```bash
-$ docker-compose build -t="web" .
+$ docker-compose build
 ```
 - **Start the Containers**:
 ```bash
 $ docker-compose up -d
 ```
-- **Access the [Website]**:(http://localhost:81)
+- **Access the [Website](http://localhost:81)**:
 
-- **Access [phpMyAdmin]**: (http://localhost:8890)
+- **Access [phpMyAdmin](http://localhost:8890)**: 
 
 - **Stopping the Containers**:
 ```bash
