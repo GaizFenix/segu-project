@@ -47,17 +47,26 @@
 
         include 'includes/dbConnect.php';
 
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
         // Fetch users from the database
-        $sql = "SELECT erabiltzailea FROM ERABILTZAILEAK";
+        $sql = "SELECT erabiltzailea, NAN FROM ERABILTZAILEAK";
         $result = $conn->query($sql);
+
+        if ($result === false) {
+            die('Query failed: ' . htmlspecialchars($conn->error));
+        }
 
         if ($result->num_rows > 0) {
             while($row = $result->fetch_assoc()) {
-                $username = $row['erabiltzailea'];
+                $erabiltzailea = $row['erabiltzailea'];
+                $NAN = $row['NAN'];
                 echo "<tr>";
-                echo "<td>" . htmlspecialchars($username) . "</td>";
-                echo "<td><a href='show_user.php?user=" . urlencode($username) . "'><button>Show</button></a></td>";
-                echo "<td><a href='modify_user.php?user=" . urlencode($username) . "'><button>Edit</button></a></td>";
+                echo "<td>" . htmlspecialchars($erabiltzailea) . "</td>";
+                echo "<td><a href='show_user.php?user=" . urlencode($NAN) . "'><button>Show</button></a></td>";
+                echo "<td><a href='modify_user.php?user=" . urlencode($NAN) . "'><button>Edit</button></a></td>";
                 echo "</tr>";
             }
         } else {

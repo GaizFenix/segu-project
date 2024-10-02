@@ -42,7 +42,7 @@ CREATE TABLE `ERABILTZAILEAK` (
   `erabiltzailea` varchar(255) NOT NULL,
   `pasahitza` CHAR(60) NOT NULL,
   `NAN` varchar(10) NOT NULL,
-  PRIMARY KEY (`erabiltzailea`)
+  PRIMARY KEY (`erabiltzailea`),
   FOREIGN KEY (`NAN`) REFERENCES `PERTSONAK`(`NAN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
