@@ -1,9 +1,9 @@
 
-### Web Sistema Lana
-## Egileak:
+## Web Sistema Lana
+### Egileak:
 Gaizka Carmona, Eneko Martinez, Mikel Aranburu, Ibai Olaziregi eta Egoitz Yuste
 
-## Proiektua Docker bidez hasteko intsrukzioak:
+### Proiektua Docker bidez hasteko intsrukzioak:
 - **Build the Docker Image**: 
 ```bash
 $ docker-compose build
