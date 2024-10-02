@@ -10,13 +10,22 @@ function validateNAN($nan) {
     return $calculatedLetter === $letter;
 }
 
-// Get the username from the URL
-$erabiltzailea = isset($_GET['user']) ? $_GET['user'] : '';
+function isNANUnique($NAN) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT NAN FROM PERTSONAK WHERE NAN = ?");
+    $stmt->bind_param("s", $NAN);
+    $stmt->execute();
+    $stmt->store_result();
+    return $stmt->num_rows === 0;
+}
 
-if ($erabiltzailea) {
+// Get the username from the URL
+$userNAN = isset($_GET['user']) ? $_GET['user'] : '';
+
+if ($userNAN) {
     // Fetch user data from the database
-    $stmt = $conn->prepare("SELECT izenAbizenak, NAN, telefonoa, jaiotzeData, email FROM PERTSONAK NATURAL JOIN ERABILTZAILEAK WHERE erabiltzailea = ?");
-    $stmt->bind_param("s", $erabiltzailea);
+    $stmt = $conn->prepare("SELECT izenAbizenak, NAN, telefonoa, jaiotzeData, email FROM PERTSONAK WHERE NAN = ?");
+    $stmt->bind_param("s", $userNAN);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -42,21 +51,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_modify_submit']))
     $jaiotzeData = $_POST['jaiotzeData'];
     $email = $_POST['email'];
 
-    if (!validateNAN($NAN)) {
-        echo "Invalid NAN.";
+    if (!validateNAN($NAN) && !isNANUnique($NAN)) {
+        echo "Invalid or repeated NAN.";
     } else {
         // Update user data in the database
         $stmt = $conn->prepare("
             UPDATE PERTSONAK 
             SET izenAbizenak = ?, NAN = ?, telefonoa = ?, jaiotzeData = ?, email = ? 
-            WHERE NAN = (SELECT NAN FROM ERABILTZAILEAK WHERE erabiltzailea = ?)
+            WHERE NAN = ?
         ");
 
         if ($stmt === false) {
             echo "Prepare failed: " . $conn->error;
         }
         
-        $stmt->bind_param("ssssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email, $erabiltzailea);
+        $stmt->bind_param("ssssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email, $userNAN);
 
         if ($stmt->execute()) {
             echo "User data updated successfully.";
@@ -96,27 +105,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_modify_submit']))
     </script>
 </head>
 <body>
-    <div class="container">
-        <h2>Modify User</h2>
-        <form id="user_modify_form" action="modify_user.php?user=<?php echo urlencode($erabiltzailea); ?>" method="post">            
-            <label for="izenAbizenak">Izen-abizenak:</label>
-            <input type="text" id="izenAbizenak" name="izenAbizenak" value="<?php echo htmlspecialchars($userData['izenAbizenak']); ?>" required><br>
-    
-            <label for="NAN">NAN-a:</label>
-            <input type="text" id="NAN" name="NAN" value="<?php echo htmlspecialchars($userData['NAN']); ?>" required><br>
-    
-            <label for="telefonoa">Telefonoa:</label>
-            <input type="tel" id="telefonoa" name="telefonoa" value="<?php echo htmlspecialchars($userData['telefonoa']); ?>" required><br>
-    
-            <label for="jaiotzeData">Jaiotze data (uuuu-hh-mm):</label>
-            <input type="text" id="jaiotzeData" name="jaiotzeData" value="<?php echo htmlspecialchars($userData['jaiotzeData']); ?>" placeholder="adib.: 2000-01-01" required><br>
-    
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($userData['email']); ?>" required><br>
-    
-            <input id="user_modify_submit" type="submit" name="user_modify_submit" value="Gorde">
-        </form>
-    </div>
+    <h2>Modify User</h2>
+    <form id="user_modify_form" action="modify_user.php?user=<?php echo urlencode($userNAN); ?>" method="post">            
+        <label for="izenAbizenak">Izen-abizenak:</label>
+        <input type="text" id="izenAbizenak" name="izenAbizenak" value="<?php echo htmlspecialchars($userData['izenAbizenak']); ?>" required><br>
+
+        <label for="NAN">NAN-a:</label>
+        <input type="text" id="NAN" name="NAN" value="<?php echo htmlspecialchars($userData['NAN']); ?>" required><br>
+
+        <label for="telefonoa">Telefonoa:</label>
+        <input type="tel" id="telefonoa" name="telefonoa" value="<?php echo htmlspecialchars($userData['telefonoa']); ?>" required><br>
+
+        <label for="jaiotzeData">Jaiotze data (uuuu-hh-mm):</label>
+        <input type="text" id="jaiotzeData" name="jaiotzeData" value="<?php echo htmlspecialchars($userData['jaiotzeData']); ?>" placeholder="adib.: 2000-01-01" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($userData['email']); ?>" required><br>
+
+        <input id="user_modify_submit" type="submit" name="user_modify_submit" value="Gorde">
+    </form>
 
 <!-- ONLY ALLOWS LETTERS AND SPACES ON IZENABIZENAK, MAX 250 CHARACTERS -->
 <script> 

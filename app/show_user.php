@@ -3,21 +3,21 @@
 include 'includes/dbConnect.php';
 
 // Get the username from the URL
-$user = isset($_GET['user']) ? $_GET['user'] : '';
+$userNAN = isset($_GET['user']) ? $_GET['user'] : '';
 
-if ($user) {
+if ($userNAN) {
     // Fetch user data from the database
-    $stmt = $conn->prepare(
-        "SELECT erabiltzailea, izenAbizenak, NAN, telefonoa, jaiotzeData, email
-        FROM ERABILTZAILEAK NATURAL JOIN PERTSONAK
-        WHERE erabiltzailea = ?");
-    $stmt->bind_param("s", $user);
+    $sql = "SELECT erabiltzailea, izenAbizenak, NAN, telefonoa, jaiotzeData, email
+            FROM PERTSONAK NATURAL JOIN ERABILTZAILEAK
+            WHERE NAN = ?";
+    $stmt = $conn->prepare($sql);
 
-    // Check if the statement is valid
+    // Check if prepare() was successful
     if ($stmt === false) {
-        echo "Prepare failed: " . $conn->error;
-        exit;
+        die('Prepare failed: ' . htmlspecialchars($conn->error));
     }
+
+    $stmt->bind_param("s", $userNAN);
 
     $stmt->execute();
     $result = $stmt->get_result();

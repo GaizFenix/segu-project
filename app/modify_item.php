@@ -2,8 +2,6 @@
 
 include 'includes/dbConnect.php';
 
-
-
 //See if the new serial number is unique
 function isSerieZenbakiaUnique($serieZenbakia) {
     global $conn;
@@ -46,6 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
     $kokalekua = $_POST['kokalekua'];
     $originalSerieZenbakia = $_GET['item'];
     
+    // PENDING TO CHANGE SO THAT THE USER HAS TO INPUT THINGS
     // Check if any of the POST values are null and replace them with the current database values
     if (empty($izena)) {
         $izena = $itemData['izena'];
@@ -63,9 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
         $kokalekua = $itemData['kokalekua'];
     }
     $originalSerieZenbakia = $_GET['item'];
-    
-    // Add a hidden input field in the form to hold the original serieZenbakia
-    
+        
     // See if serial number is unique and change the data in the database
     if (!isSerieZenbakiaUnique($serieZenbakia) && $originalSerieZenbakia !== $serieZenbakia) {
         echo "Serie zenbakia ez da unikoa.";
