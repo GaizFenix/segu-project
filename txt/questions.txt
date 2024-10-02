@@ -4,5 +4,7 @@ DONE - Nahi dugun tokian jarri daiteke, gomendagarria beste artxibo batean | ind
 DONE - Erabiltzaileen erregistroan, "username" eta "pass" kanpoak gehitu | Nola erregistratu erabiltzaile eta pasahitzak gero saioa hasteko?
 
 DONE - include must be with the php code snipet that uses it | Called to unknown function mysqli()?
+
 Edonork aldatu ditzazke erabiltzaile baten datuak edo berak soilik saioa hasi ostean?
 Zergatik beharrezkoa show_user sortzea ez badira erabiltzaileak ikuskatzen (soilik gehitzen eta aldatzen)?
+delete_item-en funtzionamendua (Delete botoia eta konfirmazioa orri berrian? delete_item?item=X)?
