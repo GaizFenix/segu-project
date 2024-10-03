@@ -5,6 +5,6 @@ DONE - Erabiltzaileen erregistroan, "username" eta "pass" kanpoak gehitu | Nola 
 
 DONE - include must be with the php code snipet that uses it | Called to unknown function mysqli()?
 
-Edonork aldatu ditzazke erabiltzaile baten datuak edo berak soilik saioa hasi ostean?
+DONE - Bai, edonork egin daike edozein gauza | Edonork aldatu ditzazke erabiltzaile baten datuak edo berak soilik saioa hasi ostean?
 Zergatik beharrezkoa show_user sortzea ez badira erabiltzaileak ikuskatzen (soilik gehitzen eta aldatzen)?
-delete_item-en funtzionamendua (Delete botoia eta konfirmazioa orri berrian? delete_item?item=X)?
+DONE - delete_item-en funtzionamendua (Delete botoia eta konfirmazioa orri berrian? delete_item?item=X)?
