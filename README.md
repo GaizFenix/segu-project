@@ -15,8 +15,8 @@ $ docker-compose up -d
 - **Access the [Website](http://localhost:81)**
 
 - **Access [phpMyAdmin](http://localhost:8890)**:
-  Usuario: admin
-  Contraseña: test
+  1. Usuario: admin
+  2. Contraseña: test
 
 - **Add database to [phpMyAdmin]**:
   1. Aukeratu "database" ezkerreko zutabean
