@@ -61,6 +61,7 @@
                 echo "<td>" . htmlspecialchars($izena) . " | " . htmlspecialchars($marka) . " " . htmlspecialchars($modeloa) . "<br>" . htmlspecialchars($serieZenbakia) . "</td>";
                 echo "<td><a href='show_item.php?item=" . urlencode($serieZenbakia) . "'><button>Show</button></a></td>";
                 echo "<td><a href='modify_item.php?item=" . urlencode($serieZenbakia) . "'><button>Edit</button></a></td>";
+                echo "<td><a href='delete_item.php?item=" . urlencode($serieZenbakia) . "'><button>Delete</button></a></td>";
                 echo "</tr>";
             }
         } else {
