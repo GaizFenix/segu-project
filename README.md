@@ -4,13 +4,13 @@
 Gaizka Carmona, Eneko Martinez, Mikel Aranburu, Ibai Olaziregi eta Egoitz Yuste
 
 ### Hobetsitako bertsioak:
-1. **Sistema eragilea**: Ubuntu 22.04.4 LTS
-2. **Docker**: 24.0.7
-3. **Docker Compose**: 3.8
-4. **Apache**: 2.4.57
-5. **PHP**: 7.2.2
-6. **MariaDB**: 10.8.2
-7. **phpMyAdmin**: 5.2.1
+- **Sistema eragilea**: Ubuntu 22.04.4 LTS
+- **Docker**: 24.0.7
+- **Docker Compose**: 3.8
+- **Apache**: 2.4.57
+- **PHP**: 7.2.2
+- **MariaDB**: 10.8.2
+- **phpMyAdmin**: 5.2.1
 
 ### Proiektua Docker bidez hasteko instrukzioak:
 - **Docker irudia eraiki**: 
