@@ -3,30 +3,39 @@
 ### Egileak:
 Gaizka Carmona, Eneko Martinez, Mikel Aranburu, Ibai Olaziregi eta Egoitz Yuste
 
+### Hobetsitako bertsioak:
+1. **Sistema eragilea**: Ubuntu 22.04.4 LTS
+2. **Docker**: 24.0.7
+3. **Docker Compose**: 3.8
+4. **Apache**: 2.4.57
+5. **PHP**: 7.2.2
+6. **MariaDB**: 10.8.2
+7. **phpMyAdmin**: 5.2.1
+
 ### Proiektua Docker bidez hasteko instrukzioak:
-- **Build the Docker Image**: 
+- **Docker irudia eraiki**: 
 ```bash
 $ docker-compose build -t="web" .
 ```
-- **Start the Containers**:
+- **_Container_-a hasi**:
 ```bash
 $ docker-compose up -d
 ```
-- **Access the [Website](http://localhost:81)**
+- **[Web orrialde](http://localhost:81)-ra nabigatu**
 
-- **Access [phpMyAdmin](http://localhost:8890)**:
+- **[PhpMyAdmin](http://localhost:8890) orrialdea ireki**:
   1. Usuario: admin
   2. Contraseña: test
 
-- **Add database to [phpMyAdmin]**:
+- **[PhpMyAdmin](http://localhost:8890)-ean datu basea gehitu**:
   1. Aukeratu "database" ezkerreko zutabean
   2. "Importar" atalera joan
   3. "Archivo a importar > Examinar > database.sql"
   4. Orrialdearen beheko zatian "Importar" sakatu
 
-- **Stopping the Containers**:
+- **_Container_-a gelditu**:
 ```bash
 $ docker-compose down
 ```
 
-This README provides clear instructions on how to set up and run the project via Docker for the first time.
+README honen bidez proiektua Docker bidez lehenengo aldiz hedatzeko insturkzio zehatzak aurkezten dira.
