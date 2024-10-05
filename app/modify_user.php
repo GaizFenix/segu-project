@@ -122,8 +122,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_modify_submit']))
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($userData['email']); ?>" required><br>
 
-        <input id="user_modify_submit" type="submit" name="user_modify_submit" value="Gorde">
+        
+        <br>
+        <div class="button-container">
+            <input id="user_modify_submit" type="submit" name="user_modify_submit" value="Gorde">
+            <input id="atzera_button" type="button" value="Atzera" onclick="location.href='users.php'">
+        </div>
     </form>
+
+    <style>
+        .button-container {
+            display: flex;
+            align-items: center;
+        }
+        #atzera_button {
+            margin-left: 2cm; /* Adjust the value as needed */
+        }
+    </style>
 
 <!-- ONLY ALLOWS LETTERS AND SPACES ON IZENABIZENAK, MAX 250 CHARACTERS -->
 <script> 

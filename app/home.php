@@ -33,8 +33,8 @@
         <button onclick="location.href='users.php'">Erabiltzaile guztien ikuskaketa</button>
         <button onclick="location.href='add_item.php'">Elementuen gehikuntza</button>
         <button onclick="location.href='items.php'">Elementu guztien ikuskaketa</button>
-        <button onclick="location.href='modify_item.php'">Elementuen datuen aldaketa</button>
-        <button onclick="location.href='delete_item.php'">Elementuen ezabaketa</button>
+        <!-- button onclick="location.href='modify_item.php'">Elementuen datuen aldaketa</button>
+        <button onclick="location.href='delete_item.php'">Elementuen ezabaketa</button !-->
         <button onclick="location.href='includes/phpinfo.php'">PHP Info</button>
     </div>
 </body>

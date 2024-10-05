@@ -116,8 +116,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <label for="pasahitza">Pasahitza:</label>
     <input type="password" id="pasahitza" name="pasahitza" required><br>
 
-    <input id="register_submit" type="submit" value="Erregistratu">
+    <br>
+    <div class="button-container">
+        <input id="register_submit" type="submit" value="Erregistratu">
+        <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
+    </div>
 </form>
+
+<style>
+    .button-container {
+        display: flex;
+        align-items: center;
+    }
+    #atzera_button {
+        margin-left: 2cm; /* Adjust the value as needed */
+    }
+</style>
 
 <!-- ONLY ALLOWS LETTERS AND SPACES ON IZENABIZENAK, MAX 250 CHARACTERS -->
 <script> 

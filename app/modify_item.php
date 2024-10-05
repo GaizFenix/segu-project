@@ -117,8 +117,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
     <label for="kokalekua">Kokalekua:</label>
     <input id="kokalekua" type="text" name="kokalekua" value="<?php echo htmlspecialchars($itemData["kokalekua"]); ?>"><br/>
     
-    <input id="item_modify_submit" type="submit" name="item_modify_submit" value="Gorde"><br/>
+    <br>
+    <div class="button-container">
+        <input id="item_modify_submit" type="submit" name="item_modify_submit" value="Gorde">
+        <input id="atzera_button" type="button" value="Atzera" onclick="location.href='items.php'">
+    </div>
 </form>
+
+<style>
+    .button-container {
+        display: flex;
+        align-items: center;
+    }
+    #atzera_button {
+        margin-left: 2cm; /* Adjust the value as needed */
+    }
+</style>
 
 <script>
     // Izena field

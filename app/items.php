@@ -64,8 +64,14 @@
                 echo "<td><a href='delete_item.php?item=" . urlencode($serieZenbakia) . "'><button>Delete</button></a></td>";
                 echo "</tr>";
             }
+            echo "<tr><td></td><td></td><td></td>";
+            echo "<td><a href='home.php" . "'><button>Atzera</button></a></td>";
+            echo "</tr>";
         } else {
             echo "<tr><td colspan='3'>No items found</td></tr>";
+            echo "<tr>";
+            echo "<td><a href='home.php" . "'><button>Atzera</button></a></td>";
+            echo "</tr>";
         }
         ?>
         

@@ -54,8 +54,22 @@
     <label for="kokalekua">Kokalekua:</label>
     <input type="text" id="kokalekua" name="kokalekua" placeholder="adib.: Kolaboragailuak 2 setup-ean" required><br>
 
-    <input id="item_add_submit" type="submit" value="Txertatu">
+    <br>
+    <div class="button-container">
+        <input id="item_add_submit" type="submit" value="Txertatu">
+        <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
+    </div>
 </form>
+
+<style>
+    .button-container {
+        display: flex;
+        align-items: center;
+    }
+    #atzera_button {
+        margin-left: 2cm; /* Adjust the value as needed */
+    }
+</style>
 
 <!-- THE NECESSARY FIELDS MUST BE FULL | MAX LENGTH OF 250 CHARS -->
 <script>

@@ -52,8 +52,23 @@
     <input type="text" id="erabiltzailea" name="erabiltzailea" placeholder="adib.: pepito88" required><br>
     <label for="pasahitza">Pasahitza:</label>
     <input type="password" id="pasahitza" name="pasahitza" placeholder="Sartu zure pasahitza" required><br>
-    <input id="login_submit" type="submit" value="Login">
+    
+    <br>
+    <div class="button-container">
+        <input id="login_submit" type="submit" value="Login">
+        <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
+    </div>
 </form>
+
+<style>
+    .button-container {
+        display: flex;
+        align-items: center;
+    }
+    #atzera_button {
+        margin-left: 2cm; /* Adjust the value as needed */
+    }
+</style>
 
 <script>
     document.getElementById('erabiltzailea').addEventListener('input', function(event) {

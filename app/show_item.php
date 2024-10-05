@@ -95,6 +95,8 @@ if ($item) {
                 <td><?php echo htmlspecialchars($itemData['kokalekua']); ?></td>
             </tr>
         </table>
+        <br>
+        <input id="atzera_button" type="button" value="Atzera" onclick="location.href='items.php'">
     </div>
 </body>
 </html>

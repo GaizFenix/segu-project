@@ -99,6 +99,8 @@ if ($userNAN) {
                 <td><?php echo htmlspecialchars($userData['email']); ?></td>
             </tr>
         </table>
+        <br>
+        <input id="atzera_button" type="button" value="Atzera" onclick="location.href='users.php'">
     </div>
 </body>
 </html>
