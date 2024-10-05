@@ -23,13 +23,13 @@
             $row = $result->fetch_assoc();
             // Verify password
             if (password_verify($pasahitza, $row['pasahitza'])) {
-                echo "Login successful!";
+                echo "Log in egokia.";
                 // Redirect or start session here
             } else {
-                echo "Invalid password.";
+                echo "Pasahitz okerra.";
             }
         } else {
-            echo "No user found with that username.";
+            echo "Erabiltzailea ez da existitzen.";
         }
 
         // Close the statement
@@ -49,7 +49,7 @@
 <h2>Login</h2>
 <form id="login_form" action="login.php" method="post">
     <label for="erabiltzailea">Erabiltzailea:</label>
-    <input type="text" id="erabiltzailea" name="erabiltzailea" placeholder="adib.: pepito88" required><br>
+    <input type="text" id="erabiltzailea" name="erabiltzailea" placeholder="adib.: pepito89" required><br>
     <label for="pasahitza">Pasahitza:</label>
     <input type="password" id="pasahitza" name="pasahitza" placeholder="Sartu zure pasahitza" required><br>
     

@@ -19,7 +19,7 @@
         $stmt->bind_param("sssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua);
 
         if ($stmt->execute()) {
-            echo "Registration successful!";
+            echo "Elementua ondo gorde da!";
         } else {
             echo "Error: " . $stmt->error;
         }

@@ -25,14 +25,14 @@ if ($userNAN) {
     if ($result->num_rows > 0) {
         $userData = $result->fetch_assoc();
     } else {
-        echo "User not found.";
+        echo "Erabiltzailea ez da aurkitu.";
         exit;
     }
 
     // Close the statement
     $stmt->close();
 } else {
-    echo "No user specified.";
+    echo "Ez da erabiltzailerik adierazi.";
     exit;
 }
 ?>

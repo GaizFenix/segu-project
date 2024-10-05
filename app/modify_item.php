@@ -24,14 +24,14 @@ if($originalSerieZenbakia) {
     if($result->num_rows > 0) {
         $itemData = $result->fetch_assoc();
     } else {
-        echo "Item not found.";
+        echo "Elementua ez da aurkitu.";
         exit;
     }
 
     // Close the statement
     $stmt->close();
 } else {
-    echo "No item specified.";
+    echo "Ez da elementurik adierazi.";
     exit;
 }
 
@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
         $stmt->bind_param("ssssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua, $originalSerieZenbakia);
 
         if ($stmt->execute()) {
-            echo "Item data updated successfully.";
+            echo "Elementua ondo aldatu da!";
         } else {
             echo "Error: " . $stmt->error;
         }

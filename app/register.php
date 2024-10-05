@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
         // Execute the second statement
         if ($stmt->execute()) {
-            echo "Erabiltzaile eta pasahitza gorde dira!";
+            echo " Erabiltzaile eta pasahitza gorde dira!";
         } else {
             echo "Error: " . $stmt->error;
         }
@@ -175,12 +175,12 @@ document.getElementById('NAN').addEventListener('input', function (event) {
         var validLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
         var calculatedLetter = validLetters[numbers % 23];
         if (calculatedLetter !== letter) {
-            input.setCustomValidity('Invalid NAN. The letter does not correspond to the numbers.');
+            input.setCustomValidity('NAN okerra, sartutako letra ez dator bat zenbakiekin.');
         } else {
             input.setCustomValidity('');
         }
     } else {
-        input.setCustomValidity('Invalid format. Use 11111111-Z');
+        input.setCustomValidity('Formato desegokia. 11111111-Z erabili');
     }
 });
 
@@ -212,7 +212,7 @@ document.getElementById('telefonoa').addEventListener('input', function (event) 
 
     // Set custom validity message if length is not 9
     if (value.length !== 9) {
-        input.setCustomValidity('Telephone number must be exactly 9 digits long.');
+        input.setCustomValidity('Telefono zenbakiak 9 digitu izan behar ditu.');
     } else {
         input.setCustomValidity('');
     }
@@ -254,7 +254,7 @@ document.getElementById('jaiotzeData').addEventListener('input', function (event
 
     // Set custom validity message if format is not yyyy-mm-dd
     if (value.length !== 10 || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-        input.setCustomValidity('Date of birth must be in the format yyyy-mm-dd.');
+        input.setCustomValidity('Jaiotze dataren formatua uuuu-hh-ee izan behar du.');
     } else {
         input.setCustomValidity('');
     }
@@ -273,7 +273,7 @@ document.getElementById('email').addEventListener('input', function (event) {
 
     // Set custom validity message if email format is incorrect
     if (!emailPattern.test(value)) {
-        input.setCustomValidity('Invalid email format.');
+        input.setCustomValidity('Email formatu desegokia.');
     } else {
         input.setCustomValidity('');
     }

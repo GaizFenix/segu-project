@@ -25,14 +25,14 @@ if ($item) {
     if ($result->num_rows > 0) {
         $itemData = $result->fetch_assoc();
     } else {
-        echo "Item not found.";
+        echo "Elementua ez da aurkitu.";
         exit;
     }
 
     // Close the statement
     $stmt->close();
 } else {
-    echo "No item specified.";
+    echo "Ez da elementurik adierazi.";
     exit;
 }
 ?>
