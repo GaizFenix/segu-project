@@ -1,7 +1,7 @@
 
 ## Web Sistema Lana
 ### Egileak:
-Gaizka Carmona, Eneko Martinez, Mikel Aranburu, Ibai Olaziregi eta Egoitz Yuste
+Gaizka Carmona, Eneko Martinez, Mikel Aranburu, Ibai Olaziregi, Egoitz Yuste eta Erlantz Tamfumu
 
 ### Hobetsitako bertsioak:
 - **Sistema eragilea**: Ubuntu 22.04.4 LTS
