@@ -102,8 +102,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
 <body>
 <h2>Modify item</h2>
 <form id="item_modify_form" action="modify_item.php?item=<?php echo urlencode($originalSerieZenbakia); ?>" method="post">            
-    <label for="Izena">Izena:</label>
-    <input id="Izena" type="text" name="Izena" value="Sartu izen berria" ><br/>
+    <label for="izena">Izena:</label>
+    <input id="izena" type="text" name="izena" value="<?php echo htmlspecialchars($itemData["izena"]); ?>" ><br/>
 
     <label for="marka">Marka:</label>
     <input id="marka" type="text" name="marka" value="<?php echo htmlspecialchars($itemData["marka"]); ?>"><br/>
