@@ -3,4 +3,6 @@ https://www.altcademy.com/blog/how-to-link-a-button-to-another-page-in-html/#:~:
 FLATPICKR DOCUMENTATION
 DOCKER DOCUMENTATION
 GITHUB COPILOT
-CHATGPT
+
+----------------------------------------------------------------------------------------------------------
+ENTREGA_2
