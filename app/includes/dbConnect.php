@@ -1,8 +1,10 @@
 <?php
-$hostname = "db";
-$username = "admin";
-$password = "test";
-$database = "database";
+$config = include('config.php');
+
+$hostname = $config['hostname'];
+$username = $config['username'];
+$password = $config['password'];
+$database = $config['database'];
 
 // Create connection
 $conn = mysqli_connect($hostname, $username, $password, $database);
