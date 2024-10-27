@@ -1,60 +1,115 @@
 <?php
 
-include 'includes/dbConnect.php'; // The include must be with the database connection
+    include 'includes/dbConnect.php'; // The include must be with the database connection
 
-function validateNAN($nan) {
-    $numbers = substr($nan, 0, 8);
-    $letter = substr($nan, -1);
-    $validLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
-    $calculatedLetter = $validLetters[$numbers % 23];
-    return $calculatedLetter === $letter;
-}
+    function validateNAN($nan) {
+        $numbers = substr($nan, 0, 8);
+        $letter = substr($nan, -1);
+        $validLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
+        $calculatedLetter = $validLetters[$numbers % 23];
+        return $calculatedLetter === $letter;
+    }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data
-    $izenAbizenak = $_POST['izenAbizenak'];
-    $NAN = $_POST['NAN'];
-    $telefonoa = $_POST['telefonoa'];
-    $jaiotzeData = $_POST['jaiotzeData'];
-    $email = $_POST['email'];
-    $erabiltzailea = $_POST['erabiltzailea'];
-    $pasahitza = $_POST['pasahitza'];
+    // Function to check if NAN is unique
+    function isNANUnique($nan) {
+        global $conn;
+        $stmt = $conn->prepare("SELECT NAN FROM PERTSONAK WHERE NAN = ?");
+        $stmt->bind_param("s", $nan);
+        $stmt->execute();
+        $stmt->store_result();
+        return $stmt->num_rows === 0;
+    }
 
-    // Apply a hash function to the password
-    $hashed_password = password_hash($pasahitza, PASSWORD_BCRYPT);
+    // Function to check if username is unique
+    function isErabiltzaileaUnique($erabiltzailea) {
+        global $conn;
+        $stmt = $conn->prepare("SELECT erabiltzailea FROM ERABILTZAILEAK WHERE erabiltzailea = ?");
+        $stmt->bind_param("s", $erabiltzailea);
+        $stmt->execute();
+        $stmt->store_result();
+        return $stmt->num_rows === 0;
+    }
 
-    // Validate NAN
-    if (!validateNAN($NAN)) {
-        echo "Invalid NAN.";
-    } else {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Retrieve form data and apply trim() method
+        $izenAbizenak = trim($_POST['izenAbizenak']);
+        $NAN = trim($_POST['NAN']);
+        $telefonoa = trim($_POST['telefonoa']);
+        $jaiotzeData = trim($_POST['jaiotzeData']);
+        $email = trim($_POST['email']);
+        $erabiltzailea = trim($_POST['erabiltzailea']);
+        $pasahitza = trim($_POST['pasahitza']);
+
+        // Apply a hash function to the password
+        $hashed_password = password_hash($pasahitza, PASSWORD_BCRYPT);
+
+        // Server-side validation
+        // Validate izenAbizenak (only letters and spaces, max 250 characters)
+        if (strlen($izenAbizenak) == 0 || strlen($izenAbizenak) > 250 || !preg_match("/^[a-zA-Z\s]+$/", $izenAbizenak)) {
+            echo "Izen-abizenak beharrezkoa da, 250 karaktere baino gutxiago, eta hizkiak bakarrik onartzen dira.";
+            exit();
+        }
+
+        // Validate NAN
+        if (!validateNAN($NAN)) {
+            echo "NAN okerra.";
+            exit();
+        }
+
+        // Check if NAN is unique
+        if (!isNANUnique($NAN)) {
+            echo "NAN errepikatua.";
+            exit();
+        }
+
+        // Validate telefonoa (must be exactly 9 digits)
+        if (!preg_match("/^\d{9}$/", $telefonoa)) {
+            echo "Telefono zenbakiak 9 digitu izan behar ditu.";
+            exit();
+        }
+
+        // Validate jaiotzeData (must be in the format yyyy-mm-dd)
+        if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $jaiotzeData)) {
+            echo "Jaiotze dataren formatua uuuu-hh-ee izan behar du.";
+            exit();
+        }
+
+        // Validate email using PHP's built-in email filter
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 250) {
+            echo "Email formatu desegokia edo gehiegi luzea.";
+            exit();
+        }
+
+        // Check if erabiltzailea (username) is unique
+        if (!isErabiltzaileaUnique($erabiltzailea)) {
+            echo "Erabiltzailea errepikatua.";
+            exit();
+        }
+
         // Prepare and bind for the first insert
         $stmt = $conn->prepare("INSERT INTO PERTSONAK (izenAbizenak, NAN, telefonoa, jaiotzeData, email) VALUES (?, ?, ?, ?, ?)");
-        
         if ($stmt === false) {
             echo "Prapare failed: " . $conn->error;
         }
-        
         $stmt->bind_param("sssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email);
-    
+        
         // Execute the first statement
         if ($stmt->execute()) {
             echo "Datuak gorde dira!";
         } else {
             echo "Error: " . $stmt->error;
         }
-    
+        
         // Close the first statement
         $stmt->close();
-    
+        
         // Prepare and bind for the second insert
         $stmt = $conn->prepare("INSERT INTO ERABILTZAILEAK (erabiltzailea, pasahitza, NAN) VALUES (?, ?, ?)");
-        
         if ($stmt === false) {
             echo "Prepare failed: " . $conn->error;
         }
-        
         $stmt->bind_param("sss", $erabiltzailea, $hashed_password, $NAN);
-    
+        
         // Execute the second statement
         if ($stmt->execute()) {
             echo " Erabiltzaile eta pasahitza gorde dira!";
@@ -65,7 +120,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Close the second statement
         $stmt->close();
     }
-}
 ?>
 
 <!DOCTYPE html>
