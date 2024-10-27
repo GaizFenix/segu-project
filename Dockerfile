@@ -1,7 +1,6 @@
 FROM php:7.2.2-apache
 RUN docker-php-ext-install mysqli
 
-
 # Modified Dockerfile code by Gaizka
 
 # # Use the official PHP image with Apache
