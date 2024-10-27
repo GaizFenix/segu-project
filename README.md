@@ -15,7 +15,7 @@ Gaizka Carmona, Eneko Martinez, Mikel Aranburu, Ibai Olaziregi, Egoitz Yuste eta
 ### Proiektua Docker bidez hasteko instrukzioak:
 - **Docker irudia eraiki**: 
 ```bash
-$ docker-compose build -t="web" .
+$ docker build -t="web" .
 ```
 - **_Container_-a hasi**:
 ```bash
