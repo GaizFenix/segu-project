@@ -41,11 +41,11 @@ if($originalSerieZenbakia) {
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit'])) {      
-    $izena = $_POST['izena'] ?: $itemData['izena']; // Use existing value if empty
-    $marka = $_POST['marka'] ?: $itemData['marka'];
-    $modeloa = $_POST['modeloa'] ?: $itemData['modeloa'];
-    $serieZenbakia = $_POST['serieZenbakia'] ?: $itemData['serieZenbakia'];
-    $kokalekua = $_POST['kokalekua'] ?: $itemData['kokalekua'];
+    $izena = trim($_POST['izena']) ?: $itemData['izena']; // Use existing value if empty
+    $marka = trim($_POST['marka']) ?: $itemData['marka'];
+    $modeloa = trim($_POST['modeloa']) ?: $itemData['modeloa'];
+    $serieZenbakia = trim($_POST['serieZenbakia']) ?: $itemData['serieZenbakia'];
+    $kokalekua = trim($_POST['kokalekua']) ?: $itemData['kokalekua'];
 
     // Server-side validation for each field
     if (strlen($izena) == 0 || strlen($izena) > 250) {

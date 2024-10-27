@@ -3,8 +3,8 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Retrieve form data
-        $erabiltzailea = $_POST['erabiltzailea'];
-        $pasahitza = $_POST['pasahitza'];
+        $erabiltzailea = trim($_POST['erabiltzailea']);
+        $pasahitza = trim($_POST['pasahitza']);
 
         // Prepare and bind
         $stmt = $conn->prepare("SELECT pasahitza FROM ERABILTZAILEAK WHERE erabiltzailea = ?");
@@ -19,7 +19,7 @@
             echo "Erabiltzaile izena ezin da 250 karaktere baino gehiagokoa izan.";
             exit(); // Stop further execution if validation fails
         } 
-        
+
         if (strlen($pasahitza) > 250) {
             echo "Pasahitza ezin da 250 karaktere baino gehiagokoa izan.";
             exit(); // Stop further execution if validation fails

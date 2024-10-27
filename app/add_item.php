@@ -3,11 +3,11 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Retrieve form data
-        $izena = $_POST['izena'];
-        $marka = $_POST['marka'];
-        $modeloa = $_POST['modeloa'];
-        $serieZenbakia = $_POST['serieZenbakia'];
-        $kokalekua = $_POST['kokalekua'];
+        $izena = trim($_POST['izena']);
+        $marka = trim($_POST['marka']);
+        $modeloa = trim($_POST['modeloa']);
+        $serieZenbakia = trim($_POST['serieZenbakia']);
+        $kokalekua = trim($_POST['kokalekua']);
 
         // Server-side validation for each field
         if (strlen($izena) == 0 || strlen($izena) > 250) {

@@ -49,11 +49,11 @@
 
     // Handle form submission
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_modify_submit'])) {
-        $izenAbizenak = trim($_POST['izenAbizenak']);
-        $NAN = strtoupper(trim($_POST['NAN']));
-        $telefonoa = trim($_POST['telefonoa']);
-        $jaiotzeData = trim($_POST['jaiotzeData']);
-        $email = trim($_POST['email']);
+        $izenAbizenak = trim($_POST['izenAbizenak']) ?: $userData['izenAbizenak']; // Use existing value if empty
+        $NAN = strtoupper(trim($_POST['NAN'])) ?: $userData['NAN'];
+        $telefonoa = trim($_POST['telefonoa']) ?: $userData['telefonoa'];
+        $jaiotzeData = trim($_POST['jaiotzeData']) ?: $userData['jaiotzeData'];
+        $email = trim($_POST['email']) ?: $userData['email'];
 
     // Server-side validation for izenAbizenak
     if (strlen($izenAbizenak) == 0 || strlen($izenAbizenak) > 250 || !preg_match("/^[a-zA-Z\s]+$/", $izenAbizenak)) {
