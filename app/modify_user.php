@@ -1,85 +1,113 @@
 <?php
 
-include 'includes/dbConnect.php';
+    include 'includes/dbConnect.php';
 
-function validateNAN($nan) {
-    $numbers = substr($nan, 0, 8);
-    $letter = substr($nan, -1);
-    $validLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
-    $calculatedLetter = $validLetters[$numbers % 23];
-    return $calculatedLetter === $letter;
-}
-
-function isNANUnique($NAN) {
-    global $conn;
-    $stmt = $conn->prepare("SELECT NAN FROM PERTSONAK WHERE NAN = ?");
-    $stmt->bind_param("s", $NAN);
-    $stmt->execute();
-    $stmt->store_result();
-    return $stmt->num_rows === 0;
-}
-
-// Get the username from the URL
-$userNAN = isset($_GET['user']) ? $_GET['user'] : '';
-
-if ($userNAN) {
-    // Fetch user data from the database
-    $stmt = $conn->prepare("SELECT izenAbizenak, NAN, telefonoa, jaiotzeData, email FROM PERTSONAK WHERE NAN = ?");
-    $stmt->bind_param("s", $userNAN);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $userData = $result->fetch_assoc();
-    } else {
-        echo "Erabiltzailea ez da aurkitu.";
-        exit;
+    function validateNAN($nan) {
+        $numbers = substr($nan, 0, 8);
+        $letter = substr($nan, -1);
+        $validLetters = "TRWAGMYFPDXBNJZSQVHLCKE";
+        $calculatedLetter = $validLetters[$numbers % 23];
+        return $calculatedLetter === $letter;
     }
 
-    // Close the statement
-    $stmt->close();
-} else {
-    echo "Ez da erabiltzailerik adierazi.";
-    exit;
-}
-
-// Handle form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_modify_submit'])) {
-    $izenAbizenak = $_POST['izenAbizenak'];
-    $NAN = $_POST['NAN'];
-    $telefonoa = $_POST['telefonoa'];
-    $jaiotzeData = $_POST['jaiotzeData'];
-    $email = $_POST['email'];
-
-    if (!validateNAN($NAN) && !isNANUnique($NAN)) {
-        echo "NAN okerra edo errepikatua.";
-    } else {
-        // Update user data in the database
-        $stmt = $conn->prepare("
-            UPDATE PERTSONAK 
-            SET izenAbizenak = ?, NAN = ?, telefonoa = ?, jaiotzeData = ?, email = ? 
-            WHERE NAN = ?
-        ");
-
-        if ($stmt === false) {
-            echo "Prepare failed: " . $conn->error;
+    // Check if NAN is unique
+    function isNANUnique($nan, $originalNAN) {
+        global $conn;
+        if ($nan === $originalNAN) {
+            return true; // NAN hasn't changed, so it's not a duplicate
         }
-        
-        $stmt->bind_param("ssssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email, $userNAN);
+        $stmt = $conn->prepare("SELECT NAN FROM PERTSONAK WHERE NAN = ?");
+        $stmt->bind_param("s", $nan);
+        $stmt->execute();
+        $stmt->store_result();
+        return $stmt->num_rows === 0; // Return true if unique
+    }
 
-        if ($stmt->execute()) {
-            echo "Erabiltzailea eguneratu da!";
+    // Get the username from the URL
+    $userNAN = isset($_GET['user']) ? $_GET['user'] : '';
+
+    if ($userNAN) {
+        // Fetch user data from the database
+        $stmt = $conn->prepare("SELECT izenAbizenak, NAN, telefonoa, jaiotzeData, email FROM PERTSONAK WHERE NAN = ?");
+        $stmt->bind_param("s", $userNAN);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $userData = $result->fetch_assoc();
         } else {
-            echo "Error: " . $stmt->error;
+            echo "Erabiltzailea ez da aurkitu.";
+            exit;
         }
 
         // Close the statement
         $stmt->close();
-
-        
+    } else {
+        echo "Ez da erabiltzailerik adierazi.";
+        exit;
     }
-}
 
+    // Handle form submission
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_modify_submit'])) {
+        $izenAbizenak = trim($_POST['izenAbizenak']);
+        $NAN = strtoupper(trim($_POST['NAN']));
+        $telefonoa = trim($_POST['telefonoa']);
+        $jaiotzeData = trim($_POST['jaiotzeData']);
+        $email = trim($_POST['email']);
+
+    // Server-side validation for izenAbizenak
+    if (strlen($izenAbizenak) == 0 || strlen($izenAbizenak) > 250 || !preg_match("/^[a-zA-Z\s]+$/", $izenAbizenak)) {
+        echo "Izen-abizenak ezin da hutsik egon, 250 karaktere baino gehiago izan behar ditu, eta bakarrik hizkiak eta espazioak onartzen dira.";
+        exit();
+    }
+
+    // Server-side validation for NAN
+    if (!validateNAN($NAN) || !isNANUnique($NAN, $userNAN)) {
+        echo "NAN okerra edo errepikatua.";
+        exit();
+    }
+
+    // Server-side validation for telefonoa (must be exactly 9 digits)
+    if (!preg_match("/^\d{9}$/", $telefonoa)) {
+        echo "Telefono zenbakiak 9 digitu izan behar ditu.";
+        exit();
+    }
+
+    // Server-side validation for jaiotzeData (must be yyyy-mm-dd)
+    if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $jaiotzeData)) {
+        echo "Jaiotze dataren formatua uuuu-hh-ee izan behar du.";
+        exit();
+    }
+
+    // Server-side validation for email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 250) {
+        echo "Email formatu desegokia edo luzeegia.";
+        exit();
+    }
+
+    // Update user data in the database
+    $stmt = $conn->prepare("
+        UPDATE PERTSONAK 
+        SET izenAbizenak = ?, NAN = ?, telefonoa = ?, jaiotzeData = ?, email = ? 
+        WHERE NAN = ?
+    ");
+
+    if ($stmt === false) {
+        echo "Prepare failed: " . $conn->error;
+    }
+    
+    $stmt->bind_param("ssssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email, $userNAN);
+
+    if ($stmt->execute()) {
+        header("Location: users.php");
+        exit;
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    // Close the statement
+    $stmt->close();
+    }
 ?>
 
 <!DOCTYPE html>

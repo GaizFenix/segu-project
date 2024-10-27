@@ -9,7 +9,28 @@
         $serieZenbakia = $_POST['serieZenbakia'];
         $kokalekua = $_POST['kokalekua'];
 
-        // Insert data into the database using prepared statements | CHECK WITH DATABASE
+        // Server-side validation for each field
+        if (strlen($izena) == 0 || strlen($izena) > 250) {
+            echo "Izena beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+            exit();
+        }
+        
+        if (strlen($marka) == 0 || strlen($marka) > 250) {
+            echo "Marka beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+            exit();
+        }
+        
+        if (strlen($modeloa) == 0 || strlen($modeloa) > 250) {
+            echo "Modeloa beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+            exit();
+        }
+
+        if (strlen($serieZenbakia) == 0 || strlen($serieZenbakia) > 250) {
+            echo "Serie Zenbakia beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+            exit();
+        }
+
+        // Insert data into the database using prepared statements
         $stmt = $conn->prepare("INSERT INTO INBENTARIOA (izena, marka, modeloa, serieZenbakia, kokalekua) VALUES (?, ?, ?, ?, ?)");
 
         if ($stmt === false) {

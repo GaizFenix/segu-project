@@ -14,6 +14,17 @@
             echo "Prepare failed: " . $conn->error;
         }
 
+        // Server-side validation for username and password length
+        if (strlen($erabiltzailea) > 250) {
+            echo "Erabiltzaile izena ezin da 250 karaktere baino gehiagokoa izan.";
+            exit(); // Stop further execution if validation fails
+        } 
+        
+        if (strlen($pasahitza) > 250) {
+            echo "Pasahitza ezin da 250 karaktere baino gehiagokoa izan.";
+            exit(); // Stop further execution if validation fails
+        }
+
         // Execute the statement
         $stmt->execute();
         $result = $stmt->get_result();

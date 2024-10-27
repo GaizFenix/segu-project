@@ -2,14 +2,18 @@
 
 include 'includes/dbConnect.php';
 
-//See if the new serial number is unique
-function isSerieZenbakiaUnique($serieZenbakia) {
+// Function to check if serial number is unique
+function isSerieZenbakiaUnique($serieZenbakia, $originalSerieZenbakia) {
     global $conn;
+    if ($serieZenbakia === $originalSerieZenbakia) {
+        // If the serial number has not changed, no need to check
+        return true;
+    }
     $stmt = $conn->prepare("SELECT serieZenbakia FROM INBENTARIOA WHERE serieZenbakia = ?");
     $stmt->bind_param("s", $serieZenbakia);
     $stmt->execute();
     $stmt->store_result();
-    return $stmt->num_rows === 0;
+    return $stmt->num_rows === 0; // Return true if unique
 }
 
 $originalSerieZenbakia = isset($_GET['item']) ? $_GET['item'] : '';
@@ -37,58 +41,59 @@ if($originalSerieZenbakia) {
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit'])) {      
-    $izena = $_POST['izena'];
-    $marka = $_POST['marka'];
-    $modeloa = $_POST['modeloa'];
-    $serieZenbakia = $_POST['serieZenbakia'];
-    $kokalekua = $_POST['kokalekua'];
-    $originalSerieZenbakia = $_GET['item'];
+    $izena = $_POST['izena'] ?: $itemData['izena']; // Use existing value if empty
+    $marka = $_POST['marka'] ?: $itemData['marka'];
+    $modeloa = $_POST['modeloa'] ?: $itemData['modeloa'];
+    $serieZenbakia = $_POST['serieZenbakia'] ?: $itemData['serieZenbakia'];
+    $kokalekua = $_POST['kokalekua'] ?: $itemData['kokalekua'];
+
+    // Server-side validation for each field
+    if (strlen($izena) == 0 || strlen($izena) > 250) {
+        echo "Izena beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+        exit();
+    }
     
-    // PENDING TO CHANGE SO THAT THE USER HAS TO INPUT THINGS
-    // Check if any of the POST values are null and replace them with the current database values
-    if (empty($izena)) {
-        $izena = $itemData['izena'];
+    if (strlen($marka) == 0 || strlen($marka) > 250) {
+        echo "Marka beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+        exit();
     }
-    if (empty($marka)) {
-        $marka = $itemData['marka'];
+    
+    if (strlen($modeloa) == 0 || strlen($modeloa) > 250) {
+        echo "Modeloa beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+        exit();
     }
-    if (empty($modeloa)) {
-        $modeloa = $itemData['modeloa'];
+
+    if (strlen($serieZenbakia) == 0 || strlen($serieZenbakia) > 250) {
+        echo "Serie Zenbakia beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+        exit();
     }
-    if (empty($serieZenbakia)) {
-        $serieZenbakia = $itemData['serieZenbakia'];
-    }
-    if (empty($kokalekua)) {
-        $kokalekua = $itemData['kokalekua'];
-    }
-    $originalSerieZenbakia = $_GET['item'];
         
-    // See if serial number is unique and change the data in the database
-    if (!isSerieZenbakiaUnique($serieZenbakia) && $originalSerieZenbakia !== $serieZenbakia) {
+    // Check if the serial number is unique (if changed)
+    if (!isSerieZenbakiaUnique($serieZenbakia, $originalSerieZenbakia)) {
         echo "Serie zenbakia ez da unikoa.";
+        exit();
+    } 
+    
+    $stmt = $conn->prepare("
+        UPDATE INBENTARIOA 
+        SET izena = ?, marka = ?, modeloa = ?, serieZenbakia = ?, kokalekua = ? 
+        WHERE serieZenbakia = ?
+    ");
+
+    if ($stmt === false) {
+        echo "Prepare failed: " . $conn->error;
         exit;
-    } else {
-        $stmt = $conn->prepare("
-            UPDATE INBENTARIOA 
-            SET izena = ?, marka = ?, modeloa = ?, serieZenbakia = ?, kokalekua = ? 
-            WHERE serieZenbakia = ?
-        ");
-
-        if ($stmt === false) {
-            echo "Prepare failed: " . $conn->error;
-            exit;
-        }
-
-        $stmt->bind_param("ssssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua, $originalSerieZenbakia);
-
-        if ($stmt->execute()) {
-            echo "Elementua ondo aldatu da!";
-        } else {
-            echo "Error: " . $stmt->error;
-        }
-
-        $stmt->close();
     }
+
+    $stmt->bind_param("ssssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua, $originalSerieZenbakia);
+
+    if ($stmt->execute()) {
+        echo "Elementua ondo aldatu da!";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
 }
 ?>
 
@@ -194,6 +199,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['item_modify_submit']))
     });
 </body>
 </html>
-
-       
-        
