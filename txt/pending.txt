@@ -1,0 +1,17 @@
+- API between program and DB to ensure privacy (that way it will not be necessary to hide connection info).
+- ZAP pen-test deep.
+- logs (local). --> logs_HTTP, logs_PHP, logs_SQL
+- Login to the application as soon as executed.
+- Users with less permisions on DB (when registered) and View (Bistak) usage.
+- When registering password, "system" to check password security, show (with colors) how strong it is and deny easy passwords.
+- Button with user icon (top right) to Logout.
+- URL parameters modifying (NOT hash, entropy). --> 404 Page, 505 Page, major error pages.
+- User and password modification for admins.
+- Manage many login tryouts, set a delay (exponential) after 3 incorrect passwords, after that, each one augments the counter.
+- After 5 minutes of inactivity (mouse moving), close session. + System to manage open sessions.
+
+OPTIONAL / IF ENOUGH TIME:
+- Change project arquitecture to make use of libraries in a more secure way (import libraries via tools as Maven, for example)-
+- Generalize project structure, avoiding redundant code and making use of classes and includes.
+- CSS.
+- Two factor authentication via e-mail.
