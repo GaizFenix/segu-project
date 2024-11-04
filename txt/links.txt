@@ -6,3 +6,6 @@ GITHUB COPILOT
 
 ----------------------------------------------------------------------------------------------------------
 ENTREGA_2
+https://www.w3schools.com/tags/ref_colornames.asp
+https://www.geeksforgeeks.org/create-a-password-strength-checker-using-html-css-and-javascript/
+https://chatgpt.com/
