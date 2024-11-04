@@ -207,7 +207,7 @@
 
         <label for="pasahitza">Pasahitza:</label>
         <input type="password" id="pasahitza" oninput="updatePasswordStrengthIndicator()" name="pasahitza" required>
-        <div id="pasahitza-indarra" style="font-weight: bold; color: gray;">Sartu pasahizta</div>
+        <div id="pasahitza-indarra" style="font-weight: bold; color: gray;"></div>
 
         <div class="button-container">
             <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
@@ -394,21 +394,31 @@ document.getElementById('email').addEventListener('input', function (event) {
             const strengthIndicator = document.getElementById('pasahitza-indarra');
             const strength = evaluatePasswordStrength(password);
 
-            if (password.length === 0) {
-                strengthIndicator.style.color = 'gray'; // Optional: for empty password
-                strengthIndicator.textContent = 'Sartu pasahitza';
-            } else if (strength === 1) {
-                strengthIndicator.style.color = 'maroon';
-                strengthIndicator.textContent = 'Oso insegurua';
-            } else if (strength === 2) {
-                strengthIndicator.style.color = 'red';
-                strengthIndicator.textContent = 'Insegurua';
-            } else if (strength === 3) {
-                strengthIndicator.style.color = 'gold';
-                strengthIndicator.textContent = 'Segurtasun ertainekoa';
-            } else if (strength === 4) {
-                strengthIndicator.style.color = 'green';
-                strengthIndicator.textContent = 'Oso segurua';
+            switch (strength) {
+                // case 0:
+                //    strengthIndicator.style.color = 'gray'; // Optional: for empty password
+                //    strengthIndicator.textContent = 'Sartu pasahitza';
+                //    break;
+                case 1:
+                    strengthIndicator.style.color = 'maroon';
+                    strengthIndicator.textContent = 'Oso insegurua';
+                    break;
+                case 2:
+                    strengthIndicator.style.color = 'red';
+                    strengthIndicator.textContent = 'Insegurua';
+                    break;
+                case 3:
+                    strengthIndicator.style.color = 'gold';
+                    strengthIndicator.textContent = 'Segurtasun ertainekoa';
+                    break;
+                case 4:
+                    strengthIndicator.style.color = 'green';
+                    strengthIndicator.textContent = 'Oso segurua';
+                    break;
+                default:
+                    strengthIndicator.style.color = 'gray'; // Optional: for empty password
+                    strengthIndicator.textContent = 'Sartu pasahitza';
+                    break;
             }
         }
     </script>
@@ -424,10 +434,10 @@ document.getElementById('email').addEventListener('input', function (event) {
 
         // Set custom validity message if password strength is below 3
         if (evaluatePasswordStrength(value) < 3) {
-           input.setCustomValidity('Pasahitza oso ahula da.(Letra larri, xehe, zenbaki eta karaktere bereziak erabiltzea gomendatzen da)');
+           input.setCustomValidity('Pasahitza oso ahula da (letra larri, xehe, zenbaki eta karaktere bereziak erabiltzea gomendatzen da).');
         } 
         else if (value.length <= 8) {
-            input.setCustomValidity('Pasahitza gutxienez 8 karaktere izan behar ditu.');
+            input.setCustomValidity('Pasahitzak gutxienez 8 karaktere izan behar ditu.');
         }
         else {
             input.setCustomValidity('');
