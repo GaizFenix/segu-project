@@ -130,8 +130,45 @@
     <title>Register</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        /* Centering the body */
+        body {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Full viewport height */
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Container to hold the centered content */
+        .container {
+            text-align: center;
+            max-width: 300px; /* Optional max width for styling */
+            width: 100%;
+        }
+
+        /* Form styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between form elements */
+        }
+
+        /* Button container styling */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        /* Add space after email input */
+        #email {
+            margin-bottom: 50px;
+        }
+    </style>
     <script>
-        // Define the Basque locale
+        // Define the Basque locale for flatpickr
         flatpickr.localize({
             weekdays: {
                 shorthand: ['Al.', 'Ar.', 'Az.', 'Og.', 'Ol.', 'La.', 'Ig.'],
@@ -144,48 +181,38 @@
         });
     </script>
 </head>
-
 <body>
-<h2>Register</h2>
-<form id="register_form" action="register.php" method="post">
-    <label for="izenAbizenak">Izen-abizenak:</label>
-    <input type="text" id="izenAbizenak" name="izenAbizenak" placeholder="adib.: Nikola Tesla" required><br>
 
-    <label for="NAN">NAN-a:</label>
-    <input type="text" id="NAN" name="NAN" placeholder="adib.: 12345678-Z" required><br>
+<div class="container">
+    <h2>Register</h2>
+    <form id="register_form" action="register.php" method="post">
+        <label for="izenAbizenak">Izen-abizenak:</label>
+        <input type="text" id="izenAbizenak" name="izenAbizenak" placeholder="adib.: Nikola Tesla" required>
 
-    <label for="telefonoa">Telefonoa:</label>
-    <input type="tel" id="telefonoa" name="telefonoa" placeholder="adib.: 123456789" required><br> <!-- check type -->
+        <label for="NAN">NAN-a:</label>
+        <input type="text" id="NAN" name="NAN" placeholder="adib.: 12345678-Z" required>
 
-    <label for="jaiotzeData">Jaiotze data (uuuu-hh-mm):</label>
-    <input type="text" id="jaiotzeData" name="jaiotzeData" placeholder="adib.: 2000-01-01" required><br>
+        <label for="telefonoa">Telefonoa:</label>
+        <input type="tel" id="telefonoa" name="telefonoa" placeholder="adib.: 123456789" required>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" placeholder="adib.: adibidea@eib.eus" required><br>
+        <label for="jaiotzeData">Jaiotze data (uuuu-hh-mm):</label>
+        <input type="text" id="jaiotzeData" name="jaiotzeData" placeholder="adib.: 2000-01-01" required>
 
-    <br>
-    <label for="erabiltzailea">Erabiltzailea:</label>
-    <input type="text" id="erabiltzailea" name="erabiltzailea" required><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="adib.: adibidea@eib.eus" required>
 
-    <label for="pasahitza">Pasahitza:</label>
-    <input type="password" id="pasahitza" name="pasahitza" required><br>
+        <label for="erabiltzailea">Erabiltzailea:</label>
+        <input type="text" id="erabiltzailea" name="erabiltzailea" required>
 
-    <br>
-    <div class="button-container">
-        <input id="register_submit" type="submit" value="Erregistratu">
-        <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
-    </div>
-</form>
+        <label for="pasahitza">Pasahitza:</label>
+        <input type="password" id="pasahitza" name="pasahitza" required>
 
-<style>
-    .button-container {
-        display: flex;
-        align-items: center;
-    }
-    #atzera_button {
-        margin-left: 2cm; /* Adjust the value as needed */
-    }
-</style>
+        <div class="button-container">
+            <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
+            <input id="register_submit" type="submit" value="Erregistratu">
+        </div>
+    </form>
+</div>
 
 <!-- ONLY ALLOWS LETTERS AND SPACES ON IZENABIZENAK, MAX 250 CHARACTERS -->
 <script> 
