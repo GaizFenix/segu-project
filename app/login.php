@@ -54,32 +54,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        /* Ensure the body takes the full viewport height */
+        body {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Full viewport height */
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Centering container */
+        .container {
+            text-align: center;
+            max-width: 300px; /* Optional: limit max width for styling */
+            width: 100%; /* Make responsive */
+        }
+
+        /* Form styling */
+        form {
+            display: flex;
+            flex-direction: column; /* Stack form elements vertically */
+            gap: 10px; /* Space between form elements */
+        }
+
+        /* Button container styling */
+        .button-container {
+            display: flex;
+            justify-content: space-between; /* Space buttons apart */
+            margin-top: 10px;
+        }
+
+        /* Style for the registration prompt */
+        .register-prompt {
+            margin-top: 20px; /* Adds space above the prompt */
+            font-size: 14px;
+        }
+        
+        /* Style for the link */
+        .register-link {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Login</h2>
-<form id="login_form" action="login.php" method="post">
-    <label for="erabiltzailea">Erabiltzailea:</label>
-    <input type="text" id="erabiltzailea" name="erabiltzailea" placeholder="adib.: pepito89" required><br>
-    <label for="pasahitza">Pasahitza:</label>
-    <input type="password" id="pasahitza" name="pasahitza" placeholder="Sartu zure pasahitza" required><br>
-    
-    <br>
-    <div class="button-container">
-        <input id="login_submit" type="submit" value="Login">
-        <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
-    </div>
-</form>
+<div class="container">
+    <h2>Login</h2>
+    <form id="login_form" action="login.php" method="post">
+        <label for="erabiltzailea">Erabiltzailea:</label>
+        <input type="text" id="erabiltzailea" name="erabiltzailea" placeholder="adib.: pepito89" required>
+        
+        <label for="pasahitza">Pasahitza:</label>
+        <input type="password" id="pasahitza" name="pasahitza" placeholder="Sartu zure pasahitza" required>
+        
+        <div class="button-container">
+            <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
+            <input id="login_submit" type="submit" value="Login">
+        </div>
+    </form>
 
-<style>
-    .button-container {
-        display: flex;
-        align-items: center;
-    }
-    #atzera_button {
-        margin-left: 2cm; /* Adjust the value as needed */
-    }
-</style>
+    <!-- Registration prompt below the buttons -->
+    <p class="register-prompt">
+        Ez duzu akonturik? <a href="register.php" class="register-link">Erregistratu</a>
+    </p>
+</div>
 
 <script>
     document.getElementById('erabiltzailea').addEventListener('input', function(event) {
