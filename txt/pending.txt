@@ -1,7 +1,7 @@
 - API between program and DB to ensure privacy (that way it will not be necessary to hide connection info).
 - ZAP pen-test deep.
 - logs (local). --> logs_HTTP, logs_PHP, logs_SQL
-- Login to the application as soon as executed.
+DONE - Login to the application as soon as executed.
 - Users with less permisions on DB (when registered) and View (Bistak) usage.
 - When registering password, "system" to check password security, show (with colors) how strong it is and deny easy passwords.
 - Button with user icon (top right) to Logout.
