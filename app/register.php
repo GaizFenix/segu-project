@@ -181,6 +181,7 @@
         });
     </script>
 </head>
+
 <body>
 
 <div class="container">
@@ -205,7 +206,8 @@
         <input type="text" id="erabiltzailea" name="erabiltzailea" required>
 
         <label for="pasahitza">Pasahitza:</label>
-        <input type="password" id="pasahitza" name="pasahitza" required>
+        <input type="password" id="pasahitza" oninput="updatePasswordStrengthIndicator()" name="pasahitza" required>
+        <div id="pasahitza-indarra" style="font-weight: bold; color: gray;">Sartu pasahizta</div>
 
         <div class="button-container">
             <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
@@ -366,6 +368,71 @@ document.getElementById('email').addEventListener('input', function (event) {
 
     input.value = value;
 });
+</script>
+
+<!-- CHECK PASSWORD STRENGTH -->
+<script>
+        function evaluatePasswordStrength(password) {
+            let strength = 0;
+            if (password.match(/[a-z]+/)) {
+                strength += 1;
+            }
+            if (password.match(/[A-Z]+/)) {
+                strength += 1;
+            }
+            if (password.match(/[0-9]+/)) {
+                strength += 1;
+            }
+            if (password.match(/[!@"#$%&'()*+,-./:;<=>?@[\]^_{|}~`]+/)) {
+                strength += 1;
+            }
+            return strength;
+        }
+
+        function updatePasswordStrengthIndicator() {
+            const password = document.getElementById('pasahitza').value;
+            const strengthIndicator = document.getElementById('pasahitza-indarra');
+            const strength = evaluatePasswordStrength(password);
+
+            if (password.length === 0) {
+                strengthIndicator.style.color = 'gray'; // Optional: for empty password
+                strengthIndicator.textContent = 'Sartu pasahitza';
+            } else if (strength === 1) {
+                strengthIndicator.style.color = 'maroon';
+                strengthIndicator.textContent = 'Oso insegurua';
+            } else if (strength === 2) {
+                strengthIndicator.style.color = 'red';
+                strengthIndicator.textContent = 'Insegurua';
+            } else if (strength === 3) {
+                strengthIndicator.style.color = 'gold';
+                strengthIndicator.textContent = 'Segurtasun ertainekoa';
+            } else if (strength === 4) {
+                strengthIndicator.style.color = 'green';
+                strengthIndicator.textContent = 'Oso segurua';
+            }
+        }
+    </script>
+
+    <!-- DENY PASSWORDS UNDER 3 LEVEL STRENGTH -->
+<script>
+    document.getElementById('pasahitza').addEventListener('input', function (event) {
+        var input = event.target;
+        var value = input.value;
+
+        // Update the password strength indicator
+        updatePasswordStrengthIndicator();
+
+        // Set custom validity message if password strength is below 3
+        if (evaluatePasswordStrength(value) < 3) {
+           input.setCustomValidity('Pasahitza oso ahula da.(Letra larri, xehe, zenbaki eta karaktere bereziak erabiltzea gomendatzen da)');
+        } 
+        else if (value.length <= 8) {
+            input.setCustomValidity('Pasahitza gutxienez 8 karaktere izan behar ditu.');
+        }
+        else {
+            input.setCustomValidity('');
+        }
+    });
 </script>
 
 </body>
