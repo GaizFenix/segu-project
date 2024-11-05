@@ -57,33 +57,17 @@ CREATE TABLE `INBENTARIOA` (
   `kokalekua` varchar(255),
   PRIMARY KEY (`serieZenbakia`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
---
--- Estructura de tabla para la tabla `usuarios`
---
 
-CREATE TABLE `usuarios` (
-  `id` int(11) NOT NULL,
-  `nombre` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `usuarios`
---
+-- "FAILED_LOGINS" taula
 
-INSERT INTO `usuarios` (`id`, `nombre`) VALUES
-(1, 'mikel'),
-(2, 'aitor');
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`);
-COMMIT;
+CREATE TABLE `FAILED_LOGINS` (
+  `ip_address` varchar(45) NOT NULL,
+  `failed_attempts` INT NOT NULL DEFAULT 0,
+  `last_attempt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `lockout_until` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`ip_address`),
+);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

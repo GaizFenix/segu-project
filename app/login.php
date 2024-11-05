@@ -1,10 +1,39 @@
 <?php
+    session_start();
     include 'includes/dbConnect.php';
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Retrieve form data
         $erabiltzailea = trim($_POST['erabiltzailea']);
         $pasahitza = trim($_POST['pasahitza']);
+        $ip_address = $_SERVER['REMOTE_ADDR'];
+
+        // Check if the user has exceeded the maximum number of failed attempts
+        $stmt = $conn->prepare("SELECT failed_attempts, lockout_until FROM FAILED_LOGINS WHERE ip_address = ?");
+        $stmt->bind_param("s", $ip_address);
+
+        if ($stmt === false) {
+            echo "Prepare failed: " . $conn->error;
+        }
+        
+        $stmt->execute();
+        $stmt->bind_result($failed_attempts, $lockout_until);
+        $stmt->fetch();
+        $stmt->close();
+
+        // If the IP address is not in the database, insert a new row with failed_attempts set to 0
+        if ($failed_attempts === null) {
+            $failed_attempts = 0;
+            $stmt = $conn->prepare("INSERT INTO FAILED_LOGINS (ip_address, failed_attempts) VALUES (?, ?)");
+            $stmt->bind_param("si", $ip_address, $failed_attempts);
+            $stmt->execute();
+            $stmt->close();
+        }
+
+        if ($lockout_until && strtotime($lockout_until) > time()) {
+            echo "Too many failed login attempts. Please try again after 5 minutes.";
+            exit();
+        }
 
         // Prepare and bind
         $stmt = $conn->prepare("SELECT pasahitza FROM ERABILTZAILEAK WHERE erabiltzailea = ?");
@@ -35,14 +64,34 @@
             // Verify password
             if (password_verify($pasahitza, $row['pasahitza'])) {
                 echo "Log in egokia.";
-                // Redirect or start session here
+
+                // Reset failed attempts on successful login
+                $stmt = $conn->prepare("DELETE FROM FAILED_LOGINS WHERE ip_address = ?");
+                $stmt->bind_param("s", $ip_address);
+                $stmt->execute();
+                $stmt->close();
+
+                // Redirect to the home page
+                header('Location: home.php');
+                exit();
             } else {
                 echo "Pasahitz okerra.";
+                // Increment failed attempts
+                if ($failed_attempts >= 2) {
+                    // Lockout the IP address for 5 minutes
+                    $lockout_until = date("Y-m-d H:i:s", strtotime("+5 minutes"));
+                    $stmt = $conn->prepare("INSERT INTO FAILED_LOGINS (ip_address, failed_attempts, lockout_until) VALUES (?, 3, ?) ON DUPLICATE KEY UPDATE failed_attempts = failed_attempts + 1, lockout_until = ?");
+                    $stmt->bind_param("ss", $lockout_until, $ip_address);
+                } else {
+                    $stmt = $conn->prepare("INSERT INTO FAILED_LOGINS (ip_address, failed_attempts) VALUES (?, 1) ON DUPLICATE KEY UPDATE failed_attempts = failed_attempts + 1, last_attempt = CURRENT_TIMESTAMP");
+                    $stmt->bind_param("s", $ip_address);
+                }
+                $stmt->execute();
+                $stmt->close();
             }
         } else {
             echo "Erabiltzailea ez da existitzen.";
         }
-
         // Close the statement
         $stmt->close();
     }
