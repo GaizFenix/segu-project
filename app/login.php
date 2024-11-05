@@ -3,7 +3,7 @@
     include 'includes/dbConnect.php';
 
     $ip_address = $_SERVER['REMOTE_ADDR'];
-    $wait_time_seconds = 10; // 5 minutes in seconds
+    $wait_time_seconds = 120; // 2 minutes in seconds
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $erabiltzailea = trim($_POST['erabiltzailea']);
