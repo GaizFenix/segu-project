@@ -156,8 +156,9 @@
         <input type="password" id="pasahitza" name="pasahitza" placeholder="Sartu zure pasahitza" required>
         
         <div class="button-container">
-            <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
-            <input id="login_submit" type="submit" value="Login">
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <input id="login_submit" type="submit" value="Login">
+            </div>
         </div>
     </form>
 
