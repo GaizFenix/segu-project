@@ -210,8 +210,9 @@
         <div id="pasahitza-indarra" style="font-weight: bold; color: gray;"></div>
 
         <div class="button-container">
-            <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
-            <input id="register_submit" type="submit" value="Erregistratu">
+            <div style="display: flex; justify-content: center; width: 100%;">
+                <input id="register_submit" type="submit" value="Erregistratu">
+            </div>
         </div>
     </form>
 </div>
