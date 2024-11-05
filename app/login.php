@@ -2,98 +2,88 @@
     session_start();
     include 'includes/dbConnect.php';
 
+    $ip_address = $_SERVER['REMOTE_ADDR'];
+    $wait_time_seconds = 10; // 5 minutes in seconds
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Retrieve form data
         $erabiltzailea = trim($_POST['erabiltzailea']);
         $pasahitza = trim($_POST['pasahitza']);
-        $ip_address = $_SERVER['REMOTE_ADDR'];
 
-        // Check if the user has exceeded the maximum number of failed attempts
+        // Clear any previous error message
+        unset($_SESSION['error_message']);
+
+        // Check current failed attempts and lockout time
         $stmt = $conn->prepare("SELECT failed_attempts, lockout_until FROM FAILED_LOGINS WHERE ip_address = ?");
         $stmt->bind_param("s", $ip_address);
-
-        if ($stmt === false) {
-            echo "Prepare failed: " . $conn->error;
-        }
-        
         $stmt->execute();
         $stmt->bind_result($failed_attempts, $lockout_until);
         $stmt->fetch();
         $stmt->close();
 
-        // If the IP address is not in the database, insert a new row with failed_attempts set to 0
-        if ($failed_attempts === null) {
-            $failed_attempts = 0;
-            $stmt = $conn->prepare("INSERT INTO FAILED_LOGINS (ip_address, failed_attempts) VALUES (?, ?)");
-            $stmt->bind_param("si", $ip_address, $failed_attempts);
+        // Check if lockout time has expired
+        if ($lockout_until && strtotime($lockout_until) > time()) {
+            // Lockout is still active, so calculate remaining time
+            $remaining_time = strtotime($lockout_until) - time();
+            $_SESSION['remaining_time'] = $remaining_time;
+            header("Location: login.php");
+            exit();
+        } elseif ($lockout_until && strtotime($lockout_until) <= time()) {
+            // Lockout has expired, reset failed attempts and lockout time
+            $stmt = $conn->prepare("UPDATE FAILED_LOGINS SET failed_attempts = 0, lockout_until = NULL WHERE ip_address = ?");
+            $stmt->bind_param("s", $ip_address);
             $stmt->execute();
             $stmt->close();
+
+            // Clear the remaining time from session
+            unset($_SESSION['remaining_time']);
         }
 
-        if ($lockout_until && strtotime($lockout_until) > time()) {
-            echo "Too many failed login attempts. Please try again after 5 minutes.";
-            exit();
-        }
-
-        // Prepare and bind
+        // Validate the user credentials
         $stmt = $conn->prepare("SELECT pasahitza FROM ERABILTZAILEAK WHERE erabiltzailea = ?");
         $stmt->bind_param("s", $erabiltzailea);
 
-        if ($stmt === false) {
-            echo "Prepare failed: " . $conn->error;
+        if (strlen($erabiltzailea) > 250 || strlen($pasahitza) > 250) {
+            $_SESSION['error_message'] = "Erabiltzaile izena edo pasahitza ezin da 250 karaktere baino gehiagokoa izan.";
+            header("Location: login.php");
+            exit();
         }
 
-        // Server-side validation for username and password length
-        if (strlen($erabiltzailea) > 250) {
-            echo "Erabiltzaile izena ezin da 250 karaktere baino gehiagokoa izan.";
-            exit(); // Stop further execution if validation fails
-        } 
-
-        if (strlen($pasahitza) > 250) {
-            echo "Pasahitza ezin da 250 karaktere baino gehiagokoa izan.";
-            exit(); // Stop further execution if validation fails
-        }
-
-        // Execute the statement
         $stmt->execute();
         $result = $stmt->get_result();
 
-        // Check if user exists
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            // Verify password
             if (password_verify($pasahitza, $row['pasahitza'])) {
-                echo "Log in egokia.";
-
                 // Reset failed attempts on successful login
-                $stmt = $conn->prepare("DELETE FROM FAILED_LOGINS WHERE ip_address = ?");
+                $stmt = $conn->prepare("INSERT INTO FAILED_LOGINS (ip_address, failed_attempts, last_attempt, lockout_until) VALUES (?, 0, CURRENT_TIMESTAMP, NULL) ON DUPLICATE KEY UPDATE failed_attempts = 0, last_attempt = CURRENT_TIMESTAMP, lockout_until = NULL");
                 $stmt->bind_param("s", $ip_address);
                 $stmt->execute();
                 $stmt->close();
 
-                // Redirect to the home page
                 header('Location: home.php');
                 exit();
             } else {
-                echo "Pasahitz okerra.";
-                // Increment failed attempts
-                if ($failed_attempts >= 2) {
-                    // Lockout the IP address for 5 minutes
-                    $lockout_until = date("Y-m-d H:i:s", strtotime("+5 minutes"));
-                    $stmt = $conn->prepare("INSERT INTO FAILED_LOGINS (ip_address, failed_attempts, lockout_until) VALUES (?, 3, ?) ON DUPLICATE KEY UPDATE failed_attempts = failed_attempts + 1, lockout_until = ?");
-                    $stmt->bind_param("ss", $lockout_until, $ip_address);
+                // Password incorrect
+                $_SESSION['error_message'] = "Pasahitz okerra.";
+
+                // Increment failed attempts and check if lockout should be applied
+                $failed_attempts = $failed_attempts ? $failed_attempts + 1 : 1;
+                if ($failed_attempts >= 3) {
+                    $lockout_until = date("Y-m-d H:i:s", time() + $wait_time_seconds);
+                    $stmt = $conn->prepare("INSERT INTO FAILED_LOGINS (ip_address, failed_attempts, last_attempt, lockout_until) VALUES (?, ?, CURRENT_TIMESTAMP, ?) ON DUPLICATE KEY UPDATE failed_attempts = ?, last_attempt = CURRENT_TIMESTAMP, lockout_until = ?");
+                    $stmt->bind_param("sisss", $ip_address, $failed_attempts, $lockout_until, $failed_attempts, $lockout_until);
                 } else {
-                    $stmt = $conn->prepare("INSERT INTO FAILED_LOGINS (ip_address, failed_attempts) VALUES (?, 1) ON DUPLICATE KEY UPDATE failed_attempts = failed_attempts + 1, last_attempt = CURRENT_TIMESTAMP");
-                    $stmt->bind_param("s", $ip_address);
+                    $stmt = $conn->prepare("INSERT INTO FAILED_LOGINS (ip_address, failed_attempts, last_attempt) VALUES (?, ?, CURRENT_TIMESTAMP) ON DUPLICATE KEY UPDATE failed_attempts = failed_attempts + 1, last_attempt = CURRENT_TIMESTAMP");
+                    $stmt->bind_param("si", $ip_address, $failed_attempts);
                 }
                 $stmt->execute();
                 $stmt->close();
             }
         } else {
-            echo "Erabiltzailea ez da existitzen.";
+            $_SESSION['error_message'] = "Erabiltzailea ez da existitzen.";
         }
-        // Close the statement
-        $stmt->close();
+        header("Location: login.php");
+        exit();
     }
 ?>
 
@@ -104,48 +94,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-        /* Ensure the body takes the full viewport height */
         body {
             display: flex;
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-            height: 100vh; /* Full viewport height */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
         }
 
-        /* Centering container */
         .container {
             text-align: center;
-            max-width: 300px; /* Optional: limit max width for styling */
-            width: 100%; /* Make responsive */
+            max-width: 300px;
+            width: 100%;
         }
 
-        /* Form styling */
         form {
             display: flex;
-            flex-direction: column; /* Stack form elements vertically */
-            gap: 10px; /* Space between form elements */
+            flex-direction: column;
+            gap: 10px;
         }
 
-        /* Button container styling */
         .button-container {
             display: flex;
-            justify-content: space-between; /* Space buttons apart */
+            justify-content: space-between;
             margin-top: 10px;
         }
 
-        /* Style for the registration prompt */
         .register-prompt {
-            margin-top: 20px; /* Adds space above the prompt */
+            margin-top: 20px;
             font-size: 14px;
         }
-        
-        /* Style for the link */
+
         .register-link {
             color: blue;
             text-decoration: underline;
             cursor: pointer;
+        }
+
+        #message {
+            margin-top: 10px;
+            color: red;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .bold {
+            font-weight: bold;
         }
     </style>
 </head>
@@ -166,7 +161,15 @@
         </div>
     </form>
 
-    <!-- Registration prompt below the buttons -->
+    <!-- Display message based on error or lockout timer -->
+    <p id="message">
+        <?php if (isset($_SESSION['remaining_time'])): ?>
+            You have to wait <span id="countdown" class="bold"></span> until you can try again.
+        <?php elseif (isset($_SESSION['error_message'])): ?>
+            <?php echo $_SESSION['error_message']; unset($_SESSION['error_message']); ?>
+        <?php endif; ?>
+    </p>
+
     <p class="register-prompt">
         Ez duzu akonturik? <a href="register.php" class="register-link">Erregistratu</a>
     </p>
@@ -176,12 +179,32 @@
     document.getElementById('erabiltzailea').addEventListener('input', function(event) {
         var input = event.target;
         var value = input.value;
-
-        // Allow a maximum of 250 characters
         if (value.length > 250) {
             input.value = value.slice(0, 250);
         }
     });
+
+    <?php if (isset($_SESSION['remaining_time'])): ?>
+        let remainingTime = <?php echo $_SESSION['remaining_time']; ?>;
+        const countdownElem = document.getElementById('countdown');
+        const messageElem = document.getElementById('message');
+
+        function updateCountdown() {
+            if (remainingTime > 0) {
+                const minutes = Math.floor(remainingTime / 60);
+                const seconds = remainingTime % 60;
+                countdownElem.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                remainingTime--;
+            } else {
+                // Timer ends, hide the message without refreshing
+                messageElem.style.display = 'none';
+                clearInterval(countdownInterval); // Stop the interval to prevent any further countdowns
+            }
+        }
+        
+        // Start the countdown interval
+        const countdownInterval = setInterval(updateCountdown, 1000);
+    <?php endif; ?>
 </script>
 
 </body>
