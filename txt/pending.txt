@@ -4,7 +4,7 @@ DECLINED - API between program and DB to ensure privacy (that way it will not be
 DONE - Login to the application as soon as executed.
 - Users with less permisions on DB (when registered) and View (Bistak) usage.
 DONE - When registering password, "system" to check password security, show (with colors) how strong it is and deny easy passwords.
-- Button with user icon (top right) to Logout.
+DONE - Button with user icon (top right) to Logout.
 - URL parameters modifying (NOT hash, entropy). --> 404 Page, 505 Page, major error pages.
 DONE - User and password modification for admins.
 DONE - Manage many login tryouts, set a delay (exponential) after 3 incorrect passwords, after that, each one augments the counter.
