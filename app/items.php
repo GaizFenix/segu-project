@@ -36,9 +36,83 @@
         button:hover {
             background-color: #45a049;
         }
+        .logout-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .logout-button img {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 5px;
+            filter: invert(100%);
+        }
+        .logout-button span {
+            font-weight: bold;
+        }
+        .logout-button:hover {
+            background-color: #ff1a1a;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+        }
+        .modal-content button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+    <button class="logout-button" onclick="showModal()">
+        <img src="includes/user-icon.png" alt="User Icon">
+        <span>Saioa itxi</span>
+    </button>
+
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <p>Oraintxe bertan <?php echo htmlspecialchars($username); ?> bezala identifikatuta zaude. Irten nahi duzu?</p>
+            <form method="post" action="">
+                <button type="submit" name="logout" value="yes">Bai</button>
+                <button type="button" onclick="hideModal()">Ez</button>
+            </form>
+        </div>
+    </div>
+
     <table>
         <tr>
             <th>Item</th>
@@ -76,5 +150,15 @@
         ?>
         
     </table>
+
+    <script>
+        function showModal() {
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+
+        function hideModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
