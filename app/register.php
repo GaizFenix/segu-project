@@ -437,7 +437,7 @@ document.getElementById('email').addEventListener('input', function (event) {
         if (evaluatePasswordStrength(value) < 3) {
            input.setCustomValidity('Pasahitza oso ahula da (letra larri, xehe, zenbaki eta karaktere bereziak erabiltzea gomendatzen da).');
         } 
-        else if (value.length <= 8) {
+        else if (value.length < 8) {
             input.setCustomValidity('Pasahitzak gutxienez 8 karaktere izan behar ditu.');
         }
         else {

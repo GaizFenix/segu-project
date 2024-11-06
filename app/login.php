@@ -1,6 +1,7 @@
 <?php
     session_start();
     include 'includes/dbConnect.php';
+    date_default_timezone_set('Europe/Madrid');
 
     $ip_address = $_SERVER['REMOTE_ADDR'];
     $wait_time_seconds = 120; // 2 minutes in seconds
@@ -59,6 +60,10 @@
                 $stmt->bind_param("s", $ip_address);
                 $stmt->execute();
                 $stmt->close();
+
+                // Save session variables
+                $_SESSION['erabiltzailea'] = $erabiltzailea;
+                $_SESSION['logged_in'] = true;
 
                 header('Location: home.php');
                 exit();
