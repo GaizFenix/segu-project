@@ -1,6 +1,4 @@
 <?php
-include 'includes/log.php';
-$log = new log('log.txt');
 
 include 'includes/dbConnect.php';
 
@@ -15,13 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($itemToDelete) {
             $stmt = $conn->prepare("DELETE FROM INBENTARIOA WHERE serieZenbakia = ?");
             if ($stmt === false) {
-                $log->logError($username, 'Prepare failed: ' . $conn->error);
                 die('Prepare failed: ' . htmlspecialchars($conn->error));
             }
             $stmt->bind_param("s", $itemToDelete);
             $stmt->execute();
             $stmt->close();
-            $log->logRequest($username, "DELETE", "Deleted item with series number: $itemToDelete");
         }
     }
     // Redirect to items.php after handling the form submission

@@ -119,13 +119,10 @@
             <th>Username</th>
         </tr>
         <?php
-        include 'includes/log.php';
-        $log = new log('log.txt');
 
         include 'includes/dbConnect.php';
 
         if ($conn->connect_error) {
-            $log->logError($username, "Connection failed: " . $conn->connect_error);
             die("Connection failed: " . $conn->connect_error);
         }
 
@@ -134,7 +131,6 @@
         $result = $conn->query($sql);
 
         if ($result === false) {
-            $log->logError($username, 'Query failed: ' . $conn->error);
             die('Query failed: ' . htmlspecialchars($conn->error));
         }
 

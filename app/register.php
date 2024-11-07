@@ -1,6 +1,4 @@
 <?php
-include 'includes/log.php';
-$log = new log('log.txt');
 
     include 'includes/dbConnect.php'; // The include must be with the database connection
 
@@ -91,7 +89,6 @@ $log = new log('log.txt');
         // Prepare and bind for the first insert
         $stmt = $conn->prepare("INSERT INTO PERTSONAK (izenAbizenak, NAN, telefonoa, jaiotzeData, email) VALUES (?, ?, ?, ?, ?)");
         if ($stmt === false) {
-            $log->logError($username, "Prepare failed: " . $conn->error);
             echo "Prapare failed: " . $conn->error;
         }
         $stmt->bind_param("sssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email);
@@ -109,7 +106,6 @@ $log = new log('log.txt');
         // Prepare and bind for the second insert
         $stmt = $conn->prepare("INSERT INTO ERABILTZAILEAK (erabiltzailea, pasahitza, NAN) VALUES (?, ?, ?)");
         if ($stmt === false) {
-            $log->logError($username, "Prepare failed: " . $conn->error);
             echo "Prepare failed: " . $conn->error;
         }
         $stmt->bind_param("sss", $erabiltzailea, $hashed_password, $NAN);

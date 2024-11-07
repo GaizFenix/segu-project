@@ -1,6 +1,4 @@
 <?php
-include 'includes/log.php';
-$log = new log('log.txt');
 
 include 'includes/dbConnect.php';
 
@@ -13,16 +11,10 @@ if ($item) {
         "SELECT izena, marka, modeloa, serieZenbakia, kokalekua
         FROM INBENTARIOA
         WHERE serieZenbakia = ?");
-    if ($stmt === false) {
-        $log->logError($username, "Prepare failed: " . $conn->error);
-        echo "Prepare failed: " . $conn->error;
-        exit;
-    }
     $stmt->bind_param("s", $item);
 
     // Check if the statement is valid
     if ($stmt === false) {
-        $log->logError($username, "Prepare failed: " . $conn->error);
         echo "Prepare failed: " . $conn->error;
         exit;
     }

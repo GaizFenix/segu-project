@@ -1,7 +1,5 @@
 <?php
     session_start();
-    include 'includes/log.php';
-    $log = new log('log.txt');
     include 'includes/dbConnect.php';
     date_default_timezone_set('Europe/Madrid');
 
@@ -17,11 +15,6 @@
 
         // Check current failed attempts and lockout time
         $stmt = $conn->prepare("SELECT failed_attempts, lockout_until FROM FAILED_LOGINS WHERE ip_address = ?");
-        if ($stmt === false) {
-            $log->logError($erabiltzailea, "Prepare failed: " . $conn->error);
-            echo "Prepare failed: " . $conn->error;
-            exit();
-        }
         $stmt->bind_param("s", $ip_address);
         $stmt->execute();
         $stmt->bind_result($failed_attempts, $lockout_until);
@@ -48,11 +41,6 @@
 
         // Validate the user credentials
         $stmt = $conn->prepare("SELECT pasahitza FROM ERABILTZAILEAK WHERE erabiltzailea = ?");
-        if ($stmt === false) {
-            $log->logError($erabiltzailea, "Prepare failed: " . $conn->error);
-            echo "Prepare failed: " . $conn->error;
-            exit();
-        }
         $stmt->bind_param("s", $erabiltzailea);
 
         if (strlen($erabiltzailea) > 250 || strlen($pasahitza) > 250) {
@@ -77,15 +65,11 @@
                 $_SESSION['erabiltzailea'] = $erabiltzailea;
                 $_SESSION['logged_in'] = true;
 
-                $log->logRequest($erabiltzailea, "LOGIN", "Successful login");
-
                 header('Location: home.php');
                 exit();
             } else {
                 // Password incorrect
                 $_SESSION['error_message'] = "Pasahitz okerra.";
-
-                $log->logRequest($erabiltzailea, "LOGIN", "Failed login attempt: Incorrect password");
 
                 // Increment failed attempts and check if lockout should be applied
                 $failed_attempts = $failed_attempts ? $failed_attempts + 1 : 1;
@@ -102,7 +86,6 @@
             }
         } else {
             $_SESSION['error_message'] = "Erabiltzailea ez da existitzen.";
-            $log->logRequest($erabiltzailea, "LOGIN", "Failed login attempt: User does not exist");
         }
         header("Location: login.php");
         exit();
