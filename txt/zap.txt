@@ -1,0 +1,17 @@
+MEDIUM:
+Application Error Disclosure (1)
+Content Security Policy (CSP) Header Not Set (7)
+Missing Anti-clickjacking Header (4)
+
+LOW:
+Cookie No HttpOnly Flag (2)
+Cookie without SameSite Attribute (2)
+Cross-Domain JavaScript Source File Inclusion (1)
+Server Leaks Information via "X-Powered-By" HTTP Response Header Field(s) (6)
+Server Leaks Version Information via "Server" HTTP Response Header Field (9)
+X-Content-Type-Options Header Missing (4)
+
+INFO:
+Modern Web Application (2)
+Session Management Response Identified (22)
+User Agent Fuzzer (24)
