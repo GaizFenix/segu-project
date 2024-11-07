@@ -1,5 +1,6 @@
 <?php
-
+    include 'includes/log.php';
+    $log = new log('log.txt');
     include 'includes/dbConnect.php';
 
     function validateNAN($nan) {
@@ -93,12 +94,14 @@
     ");
 
     if ($stmt === false) {
+        $log->logError($username, "Prepare failed: " . $conn->error);
         echo "Prepare failed: " . $conn->error;
     }
     
     $stmt->bind_param("ssssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email, $userNAN);
 
     if ($stmt->execute()) {
+        $log->logRequest($username, "MODIFY", "Modified user with NAN: $NAN");
         header("Location: users.php");
         exit;
     } else {

@@ -118,12 +118,19 @@
             <th>Item</th>
         </tr>
         <?php
+        include 'includes/log.php';
+        $log = new log('log.txt');
 
         include 'includes/dbConnect.php';
 
         // Fetch users from the database
         $sql = "SELECT izena, marka, modeloa, serieZenbakia FROM INBENTARIOA";
         $result = $conn->query($sql);
+
+        if ($result === false) {
+            $log->logError($username, 'Query failed: ' . $conn->error);
+            die('Query failed: ' . htmlspecialchars($conn->error));
+        }
 
         if ($result->num_rows > 0) {
             while($row = $result->fetch_assoc()) {

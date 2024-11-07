@@ -1,5 +1,7 @@
 <?php
     session_start();
+    include 'includes/log.php';
+    $log = new log('log.txt');
     
     // Check if user is logged in
     if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
@@ -7,12 +9,12 @@
         exit();
     }
 
-    $username = isset($_SESSION['erabiltzailea']) ? $_SESSION['erabiltzailea'] : '';
+    $erabiltzailea = isset($_SESSION['erabiltzailea']) ? $_SESSION['erabiltzailea'] : '';
 
     // Handle the logout
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout'])) {
+        $log->logRequest($erabiltzailea, "LOGOUT", "User logged out");
         $_SESSION['logged_in'] = false;
-        session_destroy();
         header('Location: login.php');
         exit();
     }
@@ -121,7 +123,7 @@
 
     <div id="logoutModal" class="modal">
         <div class="modal-content">
-            <p>Oraintxe bertan <?php echo htmlspecialchars($username); ?> bezala identifikatuta zaude. Irten nahi duzu?</p>
+            <p>Oraintxe bertan <?php echo htmlspecialchars($erabiltzailea); ?> bezala identifikatuta zaude. Irten nahi duzu?</p>
             <form method="post" action="">
                 <button type="submit" name="logout" value="yes">Bai</button>
                 <button type="button" onclick="hideModal()">Ez</button>

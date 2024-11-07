@@ -1,4 +1,6 @@
 <?php
+    include 'includes/log.php';
+    $log = new log('log.txt');
     include 'includes/dbConnect.php';
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -34,14 +36,17 @@
         $stmt = $conn->prepare("INSERT INTO INBENTARIOA (izena, marka, modeloa, serieZenbakia, kokalekua) VALUES (?, ?, ?, ?, ?)");
 
         if ($stmt === false) {
+            $log->logError($username, "Prepare failed: " . $conn->error);
             echo "Prepare failed: " . $conn->error;
         }
 
         $stmt->bind_param("sssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua);
 
         if ($stmt->execute()) {
+            $log->logRequest($username, "ADD", "Added item with series number: $serieZenbakia");
             echo "Elementua ondo gorde da!";
         } else {
+            $log->logError($username, "Error: " . $stmt->error);
             echo "Error: " . $stmt->error;
         }
 
