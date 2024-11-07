@@ -33,7 +33,7 @@ $ docker-compose up -d
   3. "Archivo a importar > Examinar > database.sql"
   4. Orrialdearen beheko zatian "Importar" sakatu
 
-- **_Container_-a gelditu**:
+- **Container-a gelditu**:
 ```bash
 $ docker-compose down
 ```
