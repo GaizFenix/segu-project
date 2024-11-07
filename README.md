@@ -17,7 +17,7 @@ Gaizka Carmona, Eneko Martinez, Mikel Aranburu, Ibai Olaziregi, Egoitz Yuste eta
 ```bash
 $ docker build -t="web" .
 ```
-- **_Container_-a hasi**:
+- **Container-a hasi**:
 ```bash
 $ docker-compose up -d
 ```
