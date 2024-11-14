@@ -1,8 +1,6 @@
 <?php
-    include 'includes/countdown.php';
     session_start();
     
-    checkCountdown();
     // Check if user is logged in
     if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         header('Location: /includes/error.php');
@@ -141,23 +139,19 @@
         }
     </script>
     <script>
-        function checkCountdown() {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'includes/countdown.php', true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    document.getElementById('countdown').innerText = response.remaining_time;
+        // Set the countdown duration (5 minutes)
+        var countdown_duration = 10; // 5 minutes in seconds
 
-                    if (response.remaining_time <= 0) {
-                        window.location.href = '/logout.php';
-                    }
-                }
-            };
-            xhr.send();
-        }
+        // Start the countdown
+        var countdown = setInterval(function() {
+            countdown_duration--;
 
-        setInterval(checkCountdown, 1000); // Check every second
+            if (countdown_duration <= 0) {
+                clearInterval(countdown);
+                window.location.href = 'logout.php';
+            }
+        }, 1000);
     </script>
+
 </body>
 </html>
