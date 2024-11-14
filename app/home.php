@@ -139,18 +139,24 @@
         }
     </script>
     <script>
-        // Set the countdown duration (5 minutes)
-        var countdown_duration = 10; // 5 minutes in seconds
+        document.addEventListener('mousemove', function(event) {
+            var x = event.clientX;
+            var y = event.clientY;
+            console.log('Mouse position: X=' + x + ', Y=' + y);
+        });
 
-        // Start the countdown
+
+        // Set the countdown duration (5 minutes)       
+          var countdown_duration = 10; // 5 minutes in seconds
+
+        //Start the countdown
         var countdown = setInterval(function() {
             countdown_duration--;
-
             if (countdown_duration <= 0) {
                 clearInterval(countdown);
                 window.location.href = 'logout.php';
             }
-        }, 1000);
+            }, 1000);
     </script>
 
 </body>
