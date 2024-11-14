@@ -1,6 +1,7 @@
 <?php
     session_start();
     include 'includes/dbConnect.php';
+    include 'includes/countdown.php';
     date_default_timezone_set('Europe/Madrid');
 
     $ip_address = $_SERVER['REMOTE_ADDR'];
@@ -66,6 +67,7 @@
                 $_SESSION['logged_in'] = true;
 
                 header('Location: home.php');
+                startCountdown();
                 exit();
             } else {
                 // Password incorrect
