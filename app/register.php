@@ -95,7 +95,7 @@
         
         // Execute the first statement
         if ($stmt->execute()) {
-            echo "Datuak gorde dira!";
+            echo "Datuak gorde dira!" . PHP_EOL;
         } else {
             echo "Error: " . $stmt->error;
         }

@@ -80,6 +80,7 @@
                 $_SESSION['logged_in'] = true;
 
                 header('Location: home.php');
+                startCountdown();
                 exit();
             } else {
                 // Password incorrect

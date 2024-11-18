@@ -1,5 +1,10 @@
 <?php
-
+    session_start();
+    // Check if user is logged in
+    if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+        header('Location: /includes/error.php');
+        exit();
+    }
     include 'includes/dbConnect.php';
 
     function validateNAN($nan) {
