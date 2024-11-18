@@ -89,7 +89,7 @@
         // Prepare and bind for the first insert
         $stmt = $conn->prepare("INSERT INTO PERTSONAK (izenAbizenak, NAN, telefonoa, jaiotzeData, email) VALUES (?, ?, ?, ?, ?)");
         if ($stmt === false) {
-            echo "Prapare failed: " . $conn->error;
+            echo "Prepare failed: " . $conn->error;
         }
         $stmt->bind_param("sssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email);
         
@@ -113,6 +113,7 @@
         // Execute the second statement
         if ($stmt->execute()) {
             echo " Erabiltzaile eta pasahitza gorde dira!";
+            header("Location: login.php");
         } else {
             echo "Error: " . $stmt->error;
         }
@@ -128,8 +129,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        // Define the Basque locale for flatpickr
+        flatpickr.localize({
+            weekdays: {
+                shorthand: ['Al.', 'Ar.', 'Az.', 'Og.', 'Ol.', 'La.', 'Ig.'],
+                longhand: ['Astelehena', 'Asteartea', 'Asteazkena', 'Osteguna', 'Ostirala', 'Larunbata', 'Igandea']
+            },
+            months: {
+                shorthand: ['Urt.', 'Ots.', 'Mar.', 'Api.', 'Mai.', 'Eka.', 'Uzt.', 'Abu.', 'Ira.', 'Urr.', 'Aza.', 'Abe.'],
+                longhand: ['Urtarrila', 'Otsaila', 'Martxoa', 'Apirila', 'Maiatza', 'Ekaina', 'Uztaila', 'Abuztua', 'Iraila', 'Urria', 'Azaroa', 'Abendua']
+            },
+        });
+    </script>
     <style>
         /* Centering the body */
         body {
@@ -167,19 +182,7 @@
             margin-bottom: 50px;
         }
     </style>
-    <script>
-        // Define the Basque locale for flatpickr
-        flatpickr.localize({
-            weekdays: {
-                shorthand: ['Al.', 'Ar.', 'Az.', 'Og.', 'Ol.', 'La.', 'Ig.'],
-                longhand: ['Astelehena', 'Asteartea', 'Asteazkena', 'Osteguna', 'Ostirala', 'Larunbata', 'Igandea']
-            },
-            months: {
-                shorthand: ['Urt.', 'Ots.', 'Mar.', 'Api.', 'Mai.', 'Eka.', 'Uzt.', 'Abu.', 'Ira.', 'Urr.', 'Aza.', 'Abe.'],
-                longhand: ['Urtarrila', 'Otsaila', 'Martxoa', 'Apirila', 'Maiatza', 'Ekaina', 'Uztaila', 'Abuztua', 'Iraila', 'Urria', 'Azaroa', 'Abendua']
-            },
-        });
-    </script>
+    
 </head>
 
 <body>
