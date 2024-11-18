@@ -2,6 +2,8 @@
     session_start();
     include 'includes/dbConnect.php';
     date_default_timezone_set('Europe/Madrid');
+    $recaptchaSiteKey = $config['siteKey'];
+    $recaptchaSecretKey = $config['secretKey'];
 
     $ip_address = $_SERVER['REMOTE_ADDR'];
     $wait_time_seconds = 120; // 2 minutes in seconds
@@ -9,6 +11,18 @@
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $erabiltzailea = trim($_POST['erabiltzailea']);
         $pasahitza = trim($_POST['pasahitza']);
+        $recaptchaResponse = $_POST['g-recaptcha-response'];
+
+        // reCAPTCHA validation
+        $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$recaptchaSecretKey&response=$recaptchaResponse");
+        $responseKeys = json_decode($response, true);
+
+        if (intval($responseKeys["success"]) !== 1) {
+            $_SESSION['error_message'] = "reCAPTCHA verification failed. Please try again.";
+            var_dump($_POST['g-recaptcha-response']); // Add this for debugging
+            // header("Location: login.php");
+            exit();
+        }
 
         // Clear any previous error message
         unset($_SESSION['error_message']);
@@ -148,6 +162,12 @@
             font-weight: bold;
         }
     </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+    function onSubmit(token) {
+        document.getElementById("login_form").submit();
+    }
+    </script>
 </head>
 <body>
 
@@ -162,7 +182,8 @@
         
         <div class="button-container">
             <div style="display: flex; justify-content: center; width: 100%;">
-                <input id="login_submit" type="submit" value="Login">
+                <button class="g-recaptcha" data-sitekey="<?php echo htmlspecialchars($recaptchaSiteKey); ?>" 
+                data-callback='onSubmit' data-action='submit'>Login</button>
             </div>
         </div>
     </form>
