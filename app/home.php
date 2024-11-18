@@ -139,24 +139,36 @@
         }
     </script>
     <script>
-        document.addEventListener('mousemove', function(event) {
-            var x = event.clientX;
-            var y = event.clientY;
-            console.log('Mouse position: X=' + x + ', Y=' + y);
-        });
+        let timeout=null;
+        let interval=null;
 
-
-        // Set the countdown duration (5 minutes)       
-          var countdown_duration = 10; // 5 minutes in seconds
-
-        //Start the countdown
-        var countdown = setInterval(function() {
-            countdown_duration--;
-            if (countdown_duration <= 0) {
-                clearInterval(countdown);
-                window.location.href = 'logout.php';
+        document.addEventListener('mousemove', () => {
+            if(timeout!==null){
+                clearTimeout(timeout);
             }
-            }, 1000);
+            if(interval!==null){
+                clearInterval(interval);
+            }
+
+            timeout= setTimeout(function() {
+                let timer=300;
+
+                interval=setInterval(function() {
+                    timer--;
+                    if(timer===-1){
+                        clearInterval(interval);
+                        window.location.href='logout.php';
+                    }
+                }, 1000);
+                
+            }, 100);
+        });
+    </script>
+            
+
+        
+
+          
     </script>
 
 </body>
