@@ -108,8 +108,6 @@
 </head>
 <body>
     <div class="container">
-        <button onclick="location.href='register.php'">Erregistroa</button>
-        <button onclick="location.href='login.php'">Identifikazioa</button>
         <button onclick="location.href='users.php'">Erabiltzaile guztien ikuskaketa</button>
         <button onclick="location.href='add_item.php'">Elementuen gehikuntza</button>
         <button onclick="location.href='items.php'">Elementu guztien ikuskaketa</button>
