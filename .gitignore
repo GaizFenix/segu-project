@@ -1,3 +1,5 @@
 mysql/
 app/includes/config.php
 *.env
+.dockerignore
+compute_hashes.sh
