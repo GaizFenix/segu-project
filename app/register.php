@@ -31,6 +31,13 @@
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Check honeypot field
+        if (!empty($_POST['honeypot'])) {
+            // Honeypot field is filled, likely a bot
+            error_log('Honeypot triggered: ' . json_encode($_POST));
+            die('Bot detected.');
+        }
+
         // Retrieve form data and apply trim() method
         $izenAbizenak = trim($_POST['izenAbizenak']);
         $NAN = trim($_POST['NAN']);
@@ -200,6 +207,8 @@
 
         <label for="jaiotzeData">Jaiotze data (uuuu-hh-mm):</label>
         <input type="text" id="jaiotzeData" name="jaiotzeData" placeholder="adib.: 2000-01-01" required>
+
+        <input type="text" name="honeypot" style="display:none;">
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" placeholder="adib.: adibidea@eib.eus" required>

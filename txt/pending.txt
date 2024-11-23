@@ -12,7 +12,7 @@ DONE - Block pages if not logged, save login info to temporary variables.
 
 ADDITIONAL:
 DONE - reCAPTCHA on Login
-- Limit petitions to register page using a honeypot / changes in SQL.
+DONE (not tested) - Limit petitions to register page using a honeypot / changes in SQL.
 
 OPTIONAL / IF ENOUGH TIME:
 - Change project arquitecture to make use of libraries in a more secure way (import libraries via tools as Maven, for example)-
