@@ -21,8 +21,10 @@ session_destroy();
         }
     </style>
 </head>
-<body>
-    <p>5 minutuak pasatu egin dira, hasi berriro saioa</p>
-    <a href="/login.php">Saioa hasi</a>
+<body>  
+    <div style="text-align: center;">
+        <p>5 minutuak pasatu egin dira, hasi berriro saioa</p>
+        <a href="/login.php">Saioa hasi</a>
+    </div>
 </body>
 </html>

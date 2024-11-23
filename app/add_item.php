@@ -19,22 +19,22 @@
 
         // Server-side validation for each field
         if (strlen($izena) == 0 || strlen($izena) > 250) {
-            echo "Izena beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+            $message = "Izena beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
             exit();
         }
         
         if (strlen($marka) == 0 || strlen($marka) > 250) {
-            echo "Marka beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+            $message = "Marka beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
             exit();
         }
         
         if (strlen($modeloa) == 0 || strlen($modeloa) > 250) {
-            echo "Modeloa beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+            $message = "Modeloa beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
             exit();
         }
 
         if (strlen($serieZenbakia) == 0 || strlen($serieZenbakia) > 250) {
-            echo "Serie Zenbakia beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
+            $message = "Serie Zenbakia beharrezkoa da eta ezin du 250 karaktere baino gehiago izan.";
             exit();
         }
 
@@ -42,15 +42,15 @@
         $stmt = $conn->prepare("INSERT INTO INBENTARIOA (izena, marka, modeloa, serieZenbakia, kokalekua) VALUES (?, ?, ?, ?, ?)");
 
         if ($stmt === false) {
-            echo "Prepare failed: " . $conn->error;
+            $message = "Prepare failed: " . $conn->error;
         }
 
         $stmt->bind_param("sssss", $izena, $marka, $modeloa, $serieZenbakia, $kokalekua);
 
         if ($stmt->execute()) {
-            echo "Elementua ondo gorde da!";
+            $message = "Elementua ondo gorde da!";
         } else {
-            echo "Error: " . $stmt->error;
+            $message = "Error: " . $stmt->error;
         }
 
         $stmt->close();
@@ -63,42 +63,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Item</title>
+    <style>
+        /* Centering the body */
+        body {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Full viewport height */
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Container to hold the centered content */
+        .container {
+            text-align: center;
+            max-width: 300px; /* Optional max width for styling */
+            width: 100%;
+        }
+
+        /* Style each form row */
+        .form-row {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        /* Style the button container */
+        .button-container {
+            display: flex;
+            justify-content: center; /* Center the button horizontally */
+            width: 100%;
+        }
+
+        /* Style the form elements */
+        form label, form input {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        /* Style the submit button */
+        .button-container input[type="submit"] {
+            width: auto; /* Allow the button to be smaller */
+            padding: 5px 10px; /* Adjust padding for a smaller button */
+            font-size: 14px; /* Adjust font size for a smaller button */
+        }
+        
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Add Item</h2>
+        <form action="add_item.php" method="post">
+            <label for="izena">Izena:</label>
+            <input type="text" id="izena" name="izena" required>
 
-<h2>Add Item</h2>
-<form id="item_add_form" action="add_item.php" method="post">
-    <label for="izena">Izena (erakundearena):</label>
-    <input type="text" id="izena" name="izena" placeholder="adib.: Mikrofonoa" required><br>
+            <label for="marka">Marka:</label>
+            <input type="text" id="marka" name="marka" required>
 
-    <label for="marka">Marka:</label>
-    <input type="text" id="marka" name="marka" placeholder="adib.: Shure" required><br>
+            <label for="modeloa">Modeloa:</label>
+            <input type="text" id="modeloa" name="modeloa" required>
 
-    <label for="modeloa">Modeloa:</label>
-    <input type="text" id="modeloa" name="modeloa" placeholder="adib.: SM-48" required><br>
+            <label for="serieZenbakia">Serie Zenbakia:</label>
+            <input type="text" id="serieZenbakia" name="serieZenbakia" required>
 
-    <label for="serieZenbakia">Serie Zenbakia:</label>
-    <input type="text" id="serieZenbakia" name="serieZenbakia" placeholder="adib.: 0000ABC" required><br>
+            <label for="kokalekua">Kokalekua:</label>
+            <input type="text" id="kokalekua" name="kokalekua">
 
-    <label for="kokalekua">Kokalekua:</label>
-    <input type="text" id="kokalekua" name="kokalekua" placeholder="adib.: Kolaboragailuak 2 setup-ean" required><br>
-
-    <br>
-    <div class="button-container">
-        <input id="item_add_submit" type="submit" value="Txertatu">
-        <input id="atzera_button" type="button" value="Atzera" onclick="location.href='home.php'">
+            <div class="button-container">
+                <input type="submit" value="Gehitu">
+            </div>
+        </form>
+        <div style="margin-top: 20px;">
+            <?php echo $message; ?>
+        </div>
     </div>
-</form>
-
-<style>
-    .button-container {
-        display: flex;
-        align-items: center;
-    }
-    #atzera_button {
-        margin-left: 2cm; /* Adjust the value as needed */
-    }
-</style>
+</body>
 
 <!-- THE NECESSARY FIELDS MUST BE FULL | MAX LENGTH OF 250 CHARS -->
 <script>

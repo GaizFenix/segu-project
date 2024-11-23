@@ -94,10 +94,12 @@
         $stmt->bind_param("sssss", $izenAbizenak, $NAN, $telefonoa, $jaiotzeData, $email);
         
         // Execute the first statement
+        $message = "";
+
         if ($stmt->execute()) {
-            echo "Datuak gorde dira!" . PHP_EOL;
+            $message = "Datuak gorde dira!";
         } else {
-            echo "Error: " . $stmt->error;
+            $message = "Error: " . $stmt->error;
         }
         
         // Close the first statement
@@ -106,20 +108,17 @@
         // Prepare and bind for the second insert
         $stmt = $conn->prepare("INSERT INTO ERABILTZAILEAK (erabiltzailea, pasahitza, NAN) VALUES (?, ?, ?)");
         if ($stmt === false) {
-            echo "Prepare failed: " . $conn->error;
+            $message = "Prepare failed: " . $conn->error;
         }
         $stmt->bind_param("sss", $erabiltzailea, $hashed_password, $NAN);
         
         // Execute the second statement
         if ($stmt->execute()) {
-            echo " Erabiltzaile eta pasahitza gorde dira!";
+            $message .= " Erabiltzaile eta pasahitza gorde dira!";
             header("Location: login.php");
         } else {
-            echo "Error: " . $stmt->error;
+            $message .= " Error: " . $stmt->error;
         }
-    
-        // Close the second statement
-        $stmt->close();
     }
 ?>
 
@@ -218,6 +217,9 @@
             </div>
         </div>
     </form>
+    <div style="margin-top: 20px;">
+        <?php echo $message; ?>
+    </div>
 </div>
 
 <!-- ONLY ALLOWS LETTERS AND SPACES ON IZENABIZENAK, MAX 250 CHARACTERS -->
