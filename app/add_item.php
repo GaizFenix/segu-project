@@ -133,6 +133,9 @@
                 <input type="submit" value="Gehitu">
             </div>
         </form>
+        <div style="width: auto; padding: 5px 10px; font-size: 14px">
+            <a href='home.php'><button>Atzera</button></a>
+        </div>
         <div style="margin-top: 20px;">
             <?php echo $message; ?>
         </div>
