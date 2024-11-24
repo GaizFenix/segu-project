@@ -7,7 +7,7 @@ services:
       - ALLOW_OVERRIDE=true
     ports:
       - "81:80"
-    #  - "443:443" # Uncomment this line if you want to use https
+      - "443:443" # Uncomment this line if you want to use https
     links:
       - db
     volumes:
