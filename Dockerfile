@@ -36,4 +36,4 @@ RUN docker-php-ext-install mysqli
 # EXPOSE 80 443
 
 # Start Apache in the foreground
-CMD ["apache2-foreground"]
+# CMD ["apache2-foreground"]
